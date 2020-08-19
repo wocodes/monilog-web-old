@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Tamma+2&display=swap');
+
+body {
+    font-family: 'Baloo Tamma 2', cursive;
+    height: 800px;
+    background-color: #edfff5;
+}
+
+.navbar {
+    background-color: #5fa76f !important;
+    color: #fff;
+}
+
+.navbar a {
+    color: #fff;
+    font-size: 18px;
+}
+
+hr {
+    margin: 0 !important;
+}
+
+.container {
+    height: 100%;
+    position:relative;
+    z-index: 9999;
+}
+
+.background-items {
+    background-repeat: no-repeat;
+    background-blend-mode: luminosity;
+    height: 250px;
+    width: 250px;
+    background-color: #e4f7ec;
+    position: fixed;
+    opacity: 0.2;
+}
+
+#background-1 {
+    background-image: url('../images/1.png');
+    left: -5px;
+    bottom: 150px;
+    transform: rotate(-45deg);
+    background-size: 200px;
+}
+
+#background-2 {
+    background-image: url('../images/2.png');
+    right: 250px;
+    top: 100px;
+    transform: rotate(-20deg);
+    background-size: 220px;
+}
+
+#background-3 {
+    background-image: url('../images/5.png');
+    right: 0px;
+    bottom: 25px;
+    /*transform: rotate(-45deg);*/
+    background-size: 400px;
+}
+
+.card {
+    border: none !important;
+    background-color: unset !important;
+}
+
+.card .card-header{
+    border: none !important;
+    background-color: unset !important;
+}
+
+.card .card-body{
+    background-color: #fff;
+    border-radius: 0 0 40px 0;
+    box-shadow: 0 0 10px 0px #999;
+    border-bottom: 2px solid #39a566;
+    padding: 40px 20px !important;
+}
+
+.card.auth {
+    padding: 60px 40px !important;
+}
+
+form {
+    width: 100%;
+    font-size: 18px;
+}
+
+form input {
+    background-color: #b0dcc3b8 !important;;
+    border: 1px solid #a0ceab !important;
+    border-bottom: 1px solid #000 !important;;
+}
+
+form button[type=submit] {
+    width: 100%;
+    background-color: #61866a;
+    font-size: 18px;
+}
