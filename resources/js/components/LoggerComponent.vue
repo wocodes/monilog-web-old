@@ -68,7 +68,7 @@
                 }
 
                 // fetch('http://monilog-api-laravel.local/api/expenses',
-                fetch('https://monilog.schoolly.co/api/expenses',
+                fetch('https://api-monilog.schoolly.co/api/expenses',
                     {
                         method: 'POST',
                         body: JSON.stringify(data),

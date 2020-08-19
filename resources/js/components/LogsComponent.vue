@@ -57,7 +57,7 @@
         created() {
             // fetch today's expenses
             // fetch('http://monilog-api-laravel.local/api/expenses/today',
-            fetch('https://monilog.schoolly.co/api/expenses/today',
+            fetch('https://api-monilog.schoolly.co/api/expenses/today',
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -74,7 +74,7 @@
             });
 
             // fetch this month's expenses
-            fetch('http://monilog-api-laravel.local/api/expenses/current-month',
+            fetch('https://api-monilog.schoolly.co/api/expenses/current-month',
                 {
                     headers: {
                         "Content-Type": "application/json",

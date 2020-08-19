@@ -75,7 +75,7 @@
 
                 // send login and details
                 // fetch('http://monilog-api-laravel.local/api/user/login', {
-                fetch('https://monilog.schoolly.co/api/user/login', {
+                fetch('https://api-monilog.schoolly.co/api/user/login', {
                         method: 'POST',
                         body: JSON.stringify(data),
                         headers: {

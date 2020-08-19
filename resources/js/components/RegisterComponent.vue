@@ -85,7 +85,7 @@
 
                 // send registration and details
                 // fetch('http://monilog-api-laravel.local/api/user/register', {
-                fetch('https://monilog.schoolly.co/api/user/register', {
+                fetch('https://api-monilog.schoolly.co/api/user/register', {
                         method: 'POST',
                         body: JSON.stringify(data),
                         headers: {
