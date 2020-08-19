@@ -3,7 +3,7 @@
 body {
     font-family: 'Baloo Tamma 2', cursive;
     height: 800px;
-    background-color: #edfff5;
+    background-color: rgba(236, 255, 245, 0.75);
 }
 
 .navbar {
@@ -72,14 +72,14 @@ hr {
 
 .card .card-body{
     background-color: #fff;
-    border-radius: 0 0 40px 0;
+    border-radius: 5px 5px 20px 5px;
     box-shadow: 0 0 10px 0px #999;
     border-bottom: 2px solid #39a566;
     padding: 40px 20px !important;
 }
 
 .card.auth {
-    padding: 60px 40px !important;
+    /*padding: 10px !important;*/
 }
 
 form {
@@ -97,4 +97,8 @@ form button[type=submit] {
     width: 100%;
     background-color: #61866a;
     font-size: 18px;
+}
+
+.navbar-nav li {
+    margin: 20px;
 }

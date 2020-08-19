@@ -1,39 +1,44 @@
 <template>
     <div class="container mb-4 pt-lg-5">
         <form @submit.prevent="submitLog">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <input type="text"
-                           placeholder="Spent some cash today? Log it here"
-                           class="form-control p-4" id="log_title"
-                           v-model="log_title" required autocomplete="log_title">
-                </div>
-                <div class="form-group col-md-3">
-                    <input id="log_amount"
-                           type="number"
-                           min="100"
-                           class="form-control p-4"
-                           placeholder="Amount Spent"
-                           v-model="log_amount" required autocomplete="log_amount">
-                </div>
-                <div class="form-group col-md-3">
-                    <button type="submit" class="btn btn-primary btn-lg"
-                            @mouseenter="show_log_details=true">Save Log</button>
-                </div>
-            </div>
+            <div class="row">
+                <div class="col-md-10 form-row">
+                    <div class="form-group col-md-6">
+                        <input type="text"
+                               placeholder="Spent some cash today? Log it here"
+                               class="form-control p-4" id="log_title"
+                               v-model="log_title" required autocomplete="log_title">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input id="log_amount"
+                               type="number"
+                               min="100"
+                               class="form-control p-4"
+                               placeholder="Amount Spent"
+                               v-model="log_amount" required autocomplete="log_amount">
+                    </div>
 
-            <div class="form-row moreLogDetails" v-show="show_log_details">
-                <div class="form-group col-md-6">
-                    <input type="text"
-                           placeholder="Have more detail for your expense?"
-                           class="form-control p-4" id="log_description"
-                           v-model="log_description" autocomplete="log_description">
+                    <small @click="show_log_details=true"
+                           v-show="!show_log_details"
+                           class="badge badge-sm badge-info"
+                           style="margin-bottom:5px;margin-left:5px;padding:4px;font-size:10px;">+ Add Details...</small>
+
+                    <div class="form-group moreLogDetails col-md-6" v-show="show_log_details">
+                        <input type="text"
+                               placeholder="Have more detail for your expense?"
+                               class="form-control p-4" id="log_description"
+                               v-model="log_description" autocomplete="log_description">
+                    </div>
+                    <div class="form-group col-md-3" v-show="show_log_details">
+                        <input id="log_date"
+                               type="date"
+                               class="form-control p-4"
+                               v-model="log_date" autocomplete="log_date">
+                    </div>
                 </div>
-                <div class="form-group col-md-3">
-                    <input id="log_date"
-                           type="date"
-                           class="form-control p-4"
-                           v-model="log_date" autocomplete="log_date">
+
+                <div class="form-group col-md-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Save Log</button>
                 </div>
             </div>
         </form>
@@ -55,7 +60,6 @@
             }
         },
         created() {
-            console.log('det', this.$parent.user);
             if(this.$parent.user === null) window.location.href = '/login';
         },
         methods: {
