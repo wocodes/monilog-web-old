@@ -12,7 +12,7 @@
                 </div>
 
 
-                <div class="card">
+                <div class="card auth">
                     <div class="card-header"><h4>Register</h4></div>
 
                     <div class="card-body">
@@ -116,7 +116,7 @@
                                 this.name = '';
 
                                 localStorage.setItem('user', JSON.stringify(resp.credentials));
-                                localStorage.setItem('authExpireTime', Date.now() + resp.credentials.expires);
+                                localStorage.setItem('authExpireTime', resp.credentials.expires);
                             }
 
                             Swal.fire({

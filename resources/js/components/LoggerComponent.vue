@@ -68,8 +68,9 @@
                     "title": this.log_title,
                     "amount": this.log_amount,
                     "description": this.log_description,
-                    "date": this.log_date,
+                    "date_logged": this.log_date,
                 }
+
 
                 // fetch('http://monilog-api-laravel.local/api/expenses',
                 fetch('https://api-monilog.schoolly.co/api/expenses',

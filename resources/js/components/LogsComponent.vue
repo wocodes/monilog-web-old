@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">Today's Log <strong>( {{ '&#8358;' + todaysTotalLog.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') }} )</strong></div>
+                    <div class="card-header">Today's Log <strong>( {{ '&#8358;' + todaysTotalLog.toLocaleString() }} )</strong></div>
 
                     <div class="card-body">
                         <p v-if="!todaysLogs.length" class="text-center">
@@ -12,12 +12,13 @@
                             </em>
                         </p>
 
-                        <ol v-if="todaysLogs.length">
+                        <ol v-if="todaysLogs.length" class="log-list">
                             <li v-for="log in todaysLogs">
-                                {{ log.title }} - {{ '&#8358;' + log.amount }}
-                                <small style="display: block">
+                                {{ log.title }} - {{ '&#8358;' + (log.amount.toLocaleString()) }}
+                                <small>({{ log.date_logged | formatShortWordDate }})</small>
+                                <p v-if="log.description" class="description badge badge-warning text-left">
                                     {{ log.description }}
-                                </small>
+                                </p>
                             </li>
                         </ol>
                     </div>
@@ -26,14 +27,17 @@
 
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">This Month's Log <strong>( {{ '&#8358;' + currentMonthsTotalLog.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') }}  )</strong></div>
+                    <div class="card-header">This Month's Log <strong>( {{ '&#8358;' + currentMonthsTotalLog.toLocaleString() }}  )</strong></div>
 
 
                     <div class="card-body">
-                        <ol>
+                        <ol class="log-list">
                             <li v-for="log in currentMonthsLogs">
-                                {{ log.title }} - {{ '&#8358;' + log.amount }}
+                                {{ log.title }} - {{ '&#8358;' + log.amount.toLocaleString() }}
                                 <small>({{ log.date_logged | formatShortWordDate }})</small>
+                                <span v-if="log.description" class="description badge badge-warning text-left">
+                                    {{ log.description }}
+                                </span>
                             </li>
                         </ol>
                     </div>
@@ -74,6 +78,7 @@
             });
 
             // fetch this month's expenses
+            // fetch('http://monilog-api-laravel.local/api/expenses/current-month',
             fetch('https://api-monilog.schoolly.co/api/expenses/current-month',
                 {
                     headers: {
