@@ -89,8 +89,9 @@
             )
             .then(response => response.json())
             .then(result => {
-                let logs = result.data;
-                this.currentMonthsLogs = logs.slice(0, 10);
+                // let logs = result.data;
+                this.currentMonthsLogs = result.data;
+                // this.currentMonthsLogs = logs.slice(0, 10);
                 this.currentMonthsLogs.filter(log => {
                     this.currentMonthsTotalLog += parseFloat(log.amount);
                 })
