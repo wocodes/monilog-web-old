@@ -26,10 +26,10 @@ You are free to send feature requests to william.odiomonafe@gmail.com
 #### Income Log - Expected
 <ul>
 <li>
-<input type="checkbox"> Save Log   
+[ ] Save Log   
 </li>
 <li>
-<input type="checkbox"> Edit/Delete Log   
+[ ] Edit/Delete Log   
 </li>
 </ul>
 
@@ -37,43 +37,43 @@ You are free to send feature requests to william.odiomonafe@gmail.com
 #### Budget Log
 <ul>
 <li>
-<input type="checkbox"> Save Log  
+[ ] Save Log  
 </li>
 <li>
-<input type="checkbox"> Edit/Delete Log   
+[ ] Edit/Delete Log   
 </li>
 </ul>
 
 #### Expense Log
 <ul>
 <li>
-<input type="checkbox" checked> Log daily expenses - Enter new
+[x] Log daily expenses - Enter new
 </li>
 <li>
-<input type="checkbox" checked> Show daily & current month's log
+[x] Show daily & current month's log
 </li>
 <li>
-<input type="checkbox"> Log daily expenses - pick from budget list
+[ ] Log daily expenses - pick from budget list
 </li>
 <li>
-<input type="checkbox"> Edit/Delete log
+[ ] Edit/Delete log
 </li>
 <li>
-<input type="checkbox"> navigate to previous month's log
+[ ] navigate to previous month's log
 </li>
 <li>
-<input type="checkbox"> Data table view to show logs with filter  
+[ ] Data table view to show logs with filter  
 </li>
 <li>
-<input type="checkbox"> Download logs (as excel or pdf)   
+[ ] Download logs (as excel or pdf)   
 </li>
 <li>
-<input type="checkbox"> Print logs (pdf)   
+[ ] Print logs (pdf)   
 </li>
 <li>
-<input type="checkbox"> Mail logs    
+[ ] Mail logs    
 </li>
 <li>
-<input type="checkbox"> Mail logs    
+[ ] Mail logs    
 </li>
 </ul>
