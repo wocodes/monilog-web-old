@@ -16,6 +16,7 @@ and annual basis. The path to wealth entials proper finance management.
 Below is a list of our development team on Monilog
 <ul>
 <li>William Odiomonafe - Developer</li>
+<li>Aleem Isiaka - Developer</li>
 </ul>
 
 ## Todos
