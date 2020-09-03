@@ -9,7 +9,15 @@ body {
     background-color: #1a1a27 !important;
     color: #fff;
 }
-
+.overlay {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(252, 195, 244, 0.75);
+}
 .navbar a {
     color: #fff;
     font-size: 18px;

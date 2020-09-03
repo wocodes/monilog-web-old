@@ -2077,6 +2077,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "LoginComponent",
   data: function data() {
@@ -2084,6 +2089,7 @@ __webpack_require__.r(__webpack_exports__);
       email: "",
       password: "",
       status: null,
+      showOverlay: false,
       status_message: null
     };
   },
@@ -2100,7 +2106,8 @@ __webpack_require__.r(__webpack_exports__);
         email: this.email,
         password: this.password,
         status: null
-      }; // send login and details
+      };
+      this.showOverlay = true; // send login and details
       // fetch('http://monilog-api-laravel.local/api/user/login', {
 
       fetch("https://api-monilog.schoolly.co/api/user/login", {
@@ -2114,6 +2121,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (resp) {
         if (resp.status === "error") {
           _this.status = "error";
+          _this.showOverlay = false;
         } else {
           _this.status = "success";
           _this.email = "";
@@ -2121,6 +2129,9 @@ __webpack_require__.r(__webpack_exports__);
           _this.name = "";
           localStorage.setItem("user", JSON.stringify(resp.credentials));
           localStorage.setItem("authExpireTime", resp.credentials.expires);
+          setTimeout(function () {
+            window.location.href = "/home";
+          }, 2000);
         }
 
         Swal.fire({
@@ -2133,9 +2144,6 @@ __webpack_require__.r(__webpack_exports__);
           showConfirmButton: false,
           background: "#cfefb7"
         });
-        setTimeout(function () {
-          window.location.href = "/home";
-        }, 2000);
       });
     }
   }
@@ -6963,7 +6971,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.login-container[data-v-4d2414bf] {\n  height: calc(70vh);\n  display: flex;\n  flex-direction: column;\n  align-content: center;\n  justify-content: center;\n}\n", ""]);
+exports.push([module.i, "\n.login-container[data-v-4d2414bf] {\n  height: calc(70vh);\n  display: flex;\n  flex-direction: column;\n  align-content: center;\n  justify-content: center;\n}\n.relative[data-v-4d2414bf] {\n  position: relative;\n  overflow: hidden;\n}\n", ""]);
 
 // exports
 
@@ -60213,7 +60221,7 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-5" }, [
         _c("div", { staticClass: "card auth" }, [
-          _c("div", { staticClass: "card-body" }, [
+          _c("div", { staticClass: "card-body relative" }, [
             _c(
               "form",
               {
@@ -60225,6 +60233,10 @@ var render = function() {
                 }
               },
               [
+                _vm.showOverlay
+                  ? _c("div", { staticClass: "overlay" })
+                  : _vm._e(),
+                _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
                   _c("input", {
                     directives: [
@@ -60287,9 +60299,22 @@ var render = function() {
                   })
                 ]),
                 _vm._v(" "),
-                _vm._m(0),
+                _c("div", { staticClass: "form-group row m-1 mb-0" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "submit" }
+                    },
+                    [
+                      _vm.showOverlay
+                        ? _c("span", [_vm._v("Loading...")])
+                        : _c("span", [_vm._v("Submit")])
+                    ]
+                  )
+                ]),
                 _vm._v(" "),
-                _vm._m(1)
+                _vm._m(0)
               ]
             )
           ])
@@ -60299,18 +60324,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group row m-1 mb-0" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-        [_vm._v("Login")]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

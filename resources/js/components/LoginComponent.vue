@@ -3,8 +3,10 @@
     <div class="row justify-content-center">
       <div class="col-md-5">
         <div class="card auth">
-          <div class="card-body">
+          <div class="card-body relative">
             <form @submit.prevent="login">
+              <div class="overlay" v-if="showOverlay"></div>
+
               <div class="form-group">
                 <input
                   id="email"
@@ -32,7 +34,10 @@
               </div>
 
               <div class="form-group row m-1 mb-0">
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">
+                  <span v-if="showOverlay">Loading...</span>
+                  <span v-else>Submit</span>
+                </button>
               </div>
 
               <p class="mt-3 text-center">
@@ -55,6 +60,7 @@ export default {
       email: "",
       password: "",
       status: null,
+      showOverlay: false,
       status_message: null,
     };
   },
@@ -72,6 +78,8 @@ export default {
         status: null,
       };
 
+      this.showOverlay = true;
+
       // send login and details
       // fetch('http://monilog-api-laravel.local/api/user/login', {
       fetch("https://api-monilog.schoolly.co/api/user/login", {
@@ -85,6 +93,7 @@ export default {
         .then((resp) => {
           if (resp.status === "error") {
             this.status = "error";
+            this.showOverlay = false;
           } else {
             this.status = "success";
             this.email = "";
@@ -93,6 +102,9 @@ export default {
 
             localStorage.setItem("user", JSON.stringify(resp.credentials));
             localStorage.setItem("authExpireTime", resp.credentials.expires);
+            setTimeout(() => {
+              window.location.href = "/home";
+            }, 2000);
           }
 
           Swal.fire({
@@ -105,10 +117,6 @@ export default {
             showConfirmButton: false,
             background: "#cfefb7",
           });
-
-          setTimeout(() => {
-            window.location.href = "/home";
-          }, 2000);
         });
     },
   },
@@ -122,5 +130,9 @@ export default {
   flex-direction: column;
   align-content: center;
   justify-content: center;
+}
+.relative {
+  position: relative;
+  overflow: hidden;
 }
 </style>
