@@ -8,6 +8,35 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import VueRouter from "vue-router";
+import VueHead from "vue-head";
+
+Vue.use(VueHead);
+Vue.use(VueRouter);
+
+const routes = [
+    {
+        name: "welcome",
+        path: "/",
+        component: Vue.component('welcome-component', require('./components/WelcomeComponent.vue').default)
+    },
+    {
+        name: "auth",
+        path: "/auth",
+        component: Vue.component('auth-component', require('./components/AuthComponent.vue').default)
+    },
+    {
+        name: "dashboard",
+        path: "/dashboard",
+        component: Vue.component('dashboard-component', require('./components/DashboardComponent.vue').default)
+    }
+]
+
+const router = new VueRouter({
+    routes: routes,
+    // mode: "history"
+})
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -18,6 +47,7 @@ window.Vue = require('vue');
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+
 
 Vue.component('register-component', require('./components/RegisterComponent.vue').default);
 Vue.component('login-component', require('./components/LoginComponent.vue').default);
@@ -49,6 +79,7 @@ Vue.filter('formatShortWordDateTime', function(value) {
 
 const app = new Vue({
     el: '#app',
+    router: router,
     data() {
       return {
           user: null,
