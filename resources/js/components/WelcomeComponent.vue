@@ -20,7 +20,12 @@
 
 <script>
     export default {
-        name: "WelcomeComponent"
+        name: "WelcomeComponent",
+        created() {
+            if(localStorage.getItem('auth')) {
+                this.$router.push('/dashboard');
+            }
+        }
     }
 </script>
 

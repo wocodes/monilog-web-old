@@ -2026,6 +2026,55 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AuthComponent",
   data: function data() {
@@ -2033,23 +2082,35 @@ __webpack_require__.r(__webpack_exports__);
       title: "Auth Page",
       login_email: "",
       login_password: "",
+      register_name: "",
+      register_email: "",
+      register_password: "",
+      register_cpassword: "",
       status: null,
       showOverlay: false,
-      status_message: null
+      status_message: null,
+      password_incorrect: false
     };
+  },
+  created: function created() {
+    if (localStorage.getItem('auth')) {
+      this.$router.push('/dashboard');
+    }
   },
   methods: {
     login: function login() {
       var _this = this;
 
+      Swal.showLoading({
+        title: "Processing..."
+      });
       var data = {
         email: this.login_email,
         password: this.login_password,
         status: null
       }; // send login and details
 
-      fetch('http://monilog-api-laravel.local/api/user/login', {
-        // fetch("https://api-monilog.schoolly.co/api/user/login", {
+      fetch("http://monilog-api-laravel.local/api" + '/user/login', {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -2065,11 +2126,16 @@ __webpack_require__.r(__webpack_exports__);
           _this.status = "success";
           _this.login_email = "";
           _this.login_password = "";
-          localStorage.setItem("user", JSON.stringify(resp.credentials));
-          localStorage.setItem("authExpireTime", resp.credentials.expires);
+          localStorage.setItem("auth", JSON.stringify(resp.credentials));
+          localStorage.setItem("authExpireTime", resp.credentials.expires + Date.now());
           setTimeout(function () {
-            window.location.href = "/#/dashboard";
-          }, 2000);
+            _this.$router.push({
+              name: 'dashboard',
+              params: {
+                user: resp.credentials.user
+              }
+            });
+          }, 1000);
         }
 
         Swal.fire({
@@ -2077,11 +2143,90 @@ __webpack_require__.r(__webpack_exports__);
           icon: resp.status,
           toast: true,
           position: "top-end",
-          timer: 4000,
+          timer: 1000,
           timerProgressBar: true,
           showConfirmButton: false,
           background: "#cfefb7",
           width: "200px"
+        });
+      });
+    },
+    register: function register() {
+      var _this2 = this;
+
+      Swal.showLoading({
+        title: "Processing..."
+      });
+
+      if (this.register_password !== this.register_cpassword) {
+        this.password_incorrect = true;
+        return;
+      }
+
+      var data = {
+        email: this.register_email,
+        name: this.register_name,
+        password: this.register_password,
+        cpassword: this.register_cpassword
+      }; // send registration and details
+
+      fetch("http://monilog-api-laravel.local/api" + "/user/register", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(function (resp) {
+        return resp.json();
+      }).then(function (resp) {
+        // then do login
+        fetch("http://monilog-api-laravel.local/api" + "/user/login", {
+          method: "POST",
+          body: JSON.stringify({
+            email: _this2.register_email,
+            password: _this2.register_password
+          }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }).then(function (resp) {
+          return resp.json();
+        }).then(function (resp) {
+          if (resp.status === "error") {
+            _this2.status = "error";
+            _this2.showOverlay = false;
+          } else {
+            _this2.status = "success";
+            _this2.login_email = "";
+            _this2.login_password = "";
+            localStorage.setItem("auth", JSON.stringify(resp.credentials));
+            localStorage.setItem("authExpireTime", resp.credentials.expires + Date.now());
+            setTimeout(function () {
+              _this2.$router.push({
+                name: 'dashboard',
+                params: {
+                  user: resp.credentials.user
+                }
+              });
+            }, 2000);
+          }
+
+          Swal.fire({
+            text: "You've successfully registered. Logging you in.",
+            icon: "success",
+            toast: true,
+            position: "top-end",
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            background: "#cfefb7"
+          }).then(function (result) {
+            if (result.dismiss === 'timer') {
+              _this2.$router.push({
+                name: 'dashboard'
+              });
+            }
+          });
         });
       });
     }
@@ -2115,6 +2260,323 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DashboardComponent.vue?vue&type=script&lang=js& ***!
   \*****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LogsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LogsComponent */ "./resources/js/components/LogsComponent.vue");
+/* harmony import */ var _LogExpenseComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LogExpenseComponent */ "./resources/js/components/LogExpenseComponent.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "DashboardComponent",
+  components: {
+    "logs-component": _LogsComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
+    LogExpenseComponent: _LogExpenseComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      user: null
+    };
+  },
+  mounted: function mounted() {
+    this.user = this.$root.user;
+  },
+  created: function created() {
+    this.user = this.$route.params.user; // let expire = parseInt(localStorage.getItem("authExpireTime"));
+    // let now = Date.now();
+    // console.log('expire',expire);
+    // console.log('now', now)
+    // console.log('time now', new Date());
+    // console.log('expires time ahead', new Date(expire));
+  },
+  methods: {
+    logout: function logout() {
+      localStorage.removeItem('auth');
+      localStorage.removeItem('authExpireTime');
+      this.$router.push({
+        name: 'auth'
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LogExpenseComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LogExpenseComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2190,1341 +2652,79 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "DashboardComponent",
+  name: "LogExpenseComponent",
   data: function data() {
     return {
-      user: null
+      show_log_details: false,
+      log_title: '',
+      log_amount: '',
+      log_description: '',
+      log_date: '',
+      status: null,
+      currentDate: null
     };
   },
-  created: function created() {
-    this.user = this.$parent.user.user;
-    console.log(this.user);
-  },
   methods: {
-    logout: function logout() {
-      localStorage.removeItem('user');
-      localStorage.removeItem('authExpireTime');
-      window.location = "/#/auth";
+    submitLog: function submitLog() {
+      var _this = this;
+
+      Swal.showLoading({
+        title: "Processing..."
+      });
+      var data = {
+        "title": this.log_title,
+        "amount": this.log_amount,
+        "description": this.log_description,
+        "date_logged": this.log_date
+      };
+      fetch("http://monilog-api-laravel.local/api" + '/expenses', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": this.$root.authToken
+        }
+      }).then(function (response) {
+        return response.json();
+      }).then(function (result) {
+        if (result.status === 'success') {
+          // dispatch event to another component (LogsComponent)
+          Swal.fire({
+            title: "Good job!",
+            text: "Expense Log Saved!",
+            icon: "success",
+            showConfirmButton: false,
+            showCancelButton: false,
+            timer: 2000
+          }).then(function (result) {
+            if (result.dismiss === 'timer') {
+              // redirect to current page
+              console.log(234); // this.$router.go(0);
+
+              window.location.reload();
+            }
+          }); // });
+          //
+          // Swal.fire({
+          //     text: result.message,
+          //     icon: result.status,
+          //     toast: true,
+          //     position: 'top-end',
+          //     timer: 4000,
+          //     timerProgressBar: true,
+          //     showConfirmButton: false,
+          //     background: '#cfefb7'
+          // })
+
+          _this.log_title = '';
+          _this.log_amount = '';
+          _this.log_description = '';
+          _this.log_date = '';
+        }
+      })["catch"](function (err) {
+        return console.log(err);
+      });
     }
   }
 });
@@ -3841,6 +3041,522 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "LogsComponent",
   data: function data() {
@@ -3855,33 +3571,32 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     // fetch today's expenses
-    // fetch('http://monilog-api-laravel.local/api/expenses/today',
-    fetch('https://api-monilog.schoolly.co/api/expenses/today', {
+    fetch("http://monilog-api-laravel.local/api" + '/expenses/today', {
       headers: {
         "Content-Type": "application/json",
-        "Authorization": this.$parent.authToken
+        "Authorization": this.$root.authToken
       }
     }).then(function (response) {
       return response.json();
     }).then(function (result) {
+      console.log(result);
       _this.todaysLogs = result.data;
 
       _this.todaysLogs.filter(function (todaysLog) {
         _this.todaysTotalLog += parseFloat(todaysLog.amount);
       });
     }); // fetch this month's expenses
-    // fetch('http://monilog-api-laravel.local/api/expenses/current-month',
 
-    fetch('https://api-monilog.schoolly.co/api/expenses/current-month', {
+    fetch("http://monilog-api-laravel.local/api" + '/expenses/current-month', {
       headers: {
         "Content-Type": "application/json",
-        "Authorization": this.$parent.authToken
+        "Authorization": this.$root.authToken
       }
     }).then(function (response) {
       return response.json();
     }).then(function (result) {
-      // let logs = result.data;
-      _this.currentMonthsLogs = result.data; // this.currentMonthsLogs = logs.slice(0, 10);
+      _this.currentMonthsLogs = result.data;
+      console.log('data', _this.currentMonthsLogs);
 
       _this.currentMonthsLogs.filter(function (log) {
         _this.currentMonthsTotalLog += parseFloat(log.amount);
@@ -4138,41 +3853,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "StatComponent"
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WelcomeComponent.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WelcomeComponent.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "WelcomeComponent"
 });
 
 /***/ }),
@@ -8603,6 +8283,25 @@ __webpack_require__.r(__webpack_exports__);
 
 })));
 //# sourceMappingURL=bootstrap.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.card-body[data-v-a3780f64] {\n    padding: 0 !important;\n}\n.modal-body[data-v-a3780f64] {\n    padding-bottom: 0 !important;\n}\n", ""]);
+
+// exports
 
 
 /***/ }),
@@ -60996,6 +60695,36 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LoggerComponent.vue?vue&type=style&index=0&id=fb6db19c&scoped=true&lang=css&":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LoggerComponent.vue?vue&type=style&index=0&id=fb6db19c&scoped=true&lang=css& ***!
@@ -61928,55 +61657,57 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "d-flex flex-column flex-root" }, [
-    _c(
-      "div",
-      {
-        staticClass:
-          "login login-6 login-signin-on login-signin-on d-flex flex-column-fluid",
-        attrs: { id: "kt_login" }
-      },
-      [
-        _c(
-          "div",
-          {
-            staticClass:
-              "d-flex flex-column flex-lg-row flex-row-fluid text-center",
-            staticStyle: {
-              height: "800px",
-              "background-image": "url(/assets/media/bg/bg-3.jpg)"
-            }
-          },
-          [
-            _vm._m(0),
-            _vm._v(" "),
-            _vm._m(1),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass:
-                  "d-flex w-100 flex-center p-15 position-relative overflow-hidden"
-              },
-              [
-                _c("div", { staticClass: "login-wrapper" }, [
-                  _c("div", { staticClass: "login-signin" }, [
-                    _vm._m(2),
-                    _vm._v(" "),
+  return _c(
+    "div",
+    {
+      staticClass: "d-flex flex-column flex-root",
+      staticStyle: { height: "830px" }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass:
+            "login login-1 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white",
+          attrs: { id: "kt_login" }
+        },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "login-content flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden p-7 mx-auto"
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "d-flex flex-column-fluid flex-center" },
+                [
+                  _c("div", { staticClass: "login-form login-signin" }, [
                     _c(
                       "form",
                       {
-                        staticClass: "form text-left",
-                        attrs: { id: "kt_login_signin_form" },
-                        on: {
-                          submit: function($event) {
-                            $event.preventDefault()
-                            return _vm.login()
-                          }
+                        staticClass: "form",
+                        attrs: {
+                          novalidate: "novalidate",
+                          id: "kt_login_signin_form"
                         }
                       },
                       [
-                        _c("div", { staticClass: "form-group py-2 m-0" }, [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass:
+                                "font-size-h6 font-weight-bolder text-dark"
+                            },
+                            [_vm._v("Email")]
+                          ),
+                          _vm._v(" "),
                           _c("input", {
                             directives: [
                               {
@@ -61987,12 +61718,8 @@ var render = function() {
                               }
                             ],
                             staticClass:
-                              "form-control h-auto border-0 px-0 placeholder-dark-75",
-                            attrs: {
-                              type: "text",
-                              placeholder: "Username",
-                              autocomplete: "off"
-                            },
+                              "form-control form-control-solid h-auto py-7 px-6 rounded-lg",
+                            attrs: { type: "text", autocomplete: "off" },
                             domProps: { value: _vm.login_email },
                             on: {
                               input: function($event) {
@@ -62005,126 +61732,249 @@ var render = function() {
                           })
                         ]),
                         _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "form-group py-2 border-top m-0" },
-                          [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.login_password,
-                                  expression: "login_password"
-                                }
-                              ],
-                              staticClass:
-                                "form-control h-auto border-0 px-0 placeholder-dark-75",
-                              attrs: {
-                                type: "Password",
-                                placeholder: "Password"
-                              },
-                              domProps: { value: _vm.login_password },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.login_password = $event.target.value
-                                }
+                        _c("div", { staticClass: "form-group" }, [
+                          _vm._m(2),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.login_password,
+                                expression: "login_password"
                               }
-                            })
-                          ]
-                        ),
+                            ],
+                            staticClass:
+                              "form-control form-control-solid h-auto py-7 px-6 rounded-lg",
+                            attrs: { type: "password", autocomplete: "off" },
+                            domProps: { value: _vm.login_password },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.login_password = $event.target.value
+                              }
+                            }
+                          })
+                        ]),
                         _vm._v(" "),
-                        _vm._m(3),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "text-center mt-15" }, [
+                        _c("div", { staticClass: "pb-lg-0 pb-5" }, [
                           _c(
                             "button",
                             {
                               staticClass:
-                                "btn btn-primary btn-pill shadow-sm py-4 px-9 font-weight-bold",
-                              attrs: { type: "submit" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.login()
-                                }
-                              }
+                                "btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3",
+                              attrs: { type: "button" },
+                              on: { click: _vm.login }
                             },
-                            [_vm._v("Log In")]
+                            [
+                              _vm.showOverlay
+                                ? _c("span", [_vm._v("Loading...")])
+                                : _c("span", [_vm._v("Submit")])
+                            ]
                           )
                         ])
                       ]
                     )
                   ]),
                   _vm._v(" "),
-                  _vm._m(4),
+                  _c("div", { staticClass: "login-form login-signup" }, [
+                    _c(
+                      "form",
+                      {
+                        staticClass: "form",
+                        attrs: {
+                          novalidate: "novalidate",
+                          id: "kt_login_signup_form"
+                        }
+                      },
+                      [
+                        _vm._m(3),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.register_name,
+                                expression: "register_name"
+                              }
+                            ],
+                            staticClass:
+                              "form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6",
+                            attrs: {
+                              type: "text",
+                              placeholder: "Fullname",
+                              autocomplete: "off"
+                            },
+                            domProps: { value: _vm.register_name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.register_name = $event.target.value
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.register_email,
+                                expression: "register_email"
+                              }
+                            ],
+                            staticClass:
+                              "form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6",
+                            attrs: {
+                              type: "email",
+                              placeholder: "Email",
+                              autocomplete: "off"
+                            },
+                            domProps: { value: _vm.register_email },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.register_email = $event.target.value
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.register_password,
+                                expression: "register_password"
+                              }
+                            ],
+                            staticClass:
+                              "form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6",
+                            class: { "is-invalid": _vm.password_incorrect },
+                            attrs: {
+                              type: "password",
+                              placeholder: "Password",
+                              autocomplete: "off"
+                            },
+                            domProps: { value: _vm.register_password },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.register_password = $event.target.value
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.register_cpassword,
+                                expression: "register_cpassword"
+                              }
+                            ],
+                            staticClass:
+                              "form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6",
+                            class: { "is-invalid": _vm.password_incorrect },
+                            attrs: {
+                              type: "password",
+                              placeholder: "Confirm password",
+                              autocomplete: "off"
+                            },
+                            domProps: { value: _vm.register_cpassword },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.register_cpassword = $event.target.value
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.password_incorrect
+                            ? _c(
+                                "div",
+                                {
+                                  class: {
+                                    "invalid-feedback": _vm.password_incorrect
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "Password are not the same. Please try again."
+                                  )
+                                ]
+                              )
+                            : _vm._e()
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(4),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "form-group d-flex flex-wrap pb-lg-0 pb-3"
+                          },
+                          [
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4",
+                                attrs: { type: "button" },
+                                on: { click: _vm.register }
+                              },
+                              [_vm._v("Submit")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3",
+                                attrs: {
+                                  type: "button",
+                                  id: "kt_login_signup_cancel"
+                                }
+                              },
+                              [_vm._v("Login instead")]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  ]),
                   _vm._v(" "),
                   _vm._m(5)
-                ])
-              ]
-            )
-          ]
-        )
-      ]
-    )
-  ])
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    ]
+  )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex w-100 flex-center p-15" }, [
-      _c("div", { staticClass: "login-wrapper" }, [
-        _c("div", { staticClass: "text-dark-75" }, [
-          _c("a", { attrs: { href: "#" } }, [
-            _c("img", {
-              staticClass: "max-h-75px",
-              attrs: { src: "/assets/media/logos/logo-letter-13.png", alt: "" }
-            })
-          ]),
-          _vm._v(" "),
-          _c("h3", { staticClass: "mb-8 mt-22 font-weight-bold" }, [
-            _vm._v("MANAGE YOUR FINANCES TODAY")
-          ]),
-          _vm._v(" "),
-          _c("p", { staticClass: "mb-15 text-muted font-weight-bold" }, [
-            _vm._v("The blah blah blah.")
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass:
-                "btn btn-outline-primary btn-pill py-4 px-9 font-weight-bold",
-              attrs: { type: "button", id: "kt_login_signup" }
-            },
-            [_vm._v("Get An Account")]
-          )
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "login-divider" }, [_c("div")])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center mb-10 mb-lg-20" }, [
-      _c("h2", { staticClass: "font-weight-bold" }, [_vm._v("Sign In")]),
-      _vm._v(" "),
-      _c("p", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Enter your username and password")
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -62132,31 +61982,45 @@ var staticRenderFns = [
     return _c(
       "div",
       {
-        staticClass:
-          "form-group d-flex flex-wrap justify-content-between align-items-center mt-5"
+        staticClass: "login-aside d-flex flex-column flex-row-auto",
+        staticStyle: { "background-color": "#F2C98A" }
       },
       [
-        _c("div", { staticClass: "checkbox-inline" }, [
-          _c(
-            "label",
-            { staticClass: "checkbox m-0 text-muted font-weight-bold" },
-            [
-              _c("input", { attrs: { type: "checkbox", name: "remember" } }),
-              _vm._v(" "),
-              _c("span"),
-              _vm._v("Remember me")
-            ]
-          )
-        ]),
-        _vm._v(" "),
         _c(
-          "a",
-          {
-            staticClass: "text-muted text-hover-primary font-weight-bold",
-            attrs: { href: "javascript:;", id: "kt_login_forgot" }
-          },
-          [_vm._v("Forget Password ?")]
-        )
+          "div",
+          { staticClass: "d-flex flex-column-auto flex-column pt-lg-40 pt-15" },
+          [
+            _c("a", { staticClass: "text-center mb-10", attrs: { href: "" } }, [
+              _c("img", {
+                staticClass: "max-h-70px",
+                attrs: { src: "/images/logo.png", alt: "" }
+              })
+            ]),
+            _vm._v(" "),
+            _c(
+              "h3",
+              {
+                staticClass:
+                  "font-weight-bolder text-center font-size-h4 font-size-h1-lg",
+                staticStyle: { color: "#986923" }
+              },
+              [
+                _vm._v("True financial freedom is conscious "),
+                _c("br"),
+                _vm._v("tracking of income and expenses...")
+              ]
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", {
+          staticClass:
+            "aside-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center",
+          staticStyle: {
+            "background-image":
+              "url(/assets/media/svg/illustrations/login-visual-1.svg)"
+          }
+        })
       ]
     )
   },
@@ -62164,116 +62028,48 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "login-signup" }, [
-      _c("div", { staticClass: "text-center mb-10 mb-lg-20" }, [
-        _c("h3", {}, [_vm._v("Sign Up")]),
-        _vm._v(" "),
-        _c("p", { staticClass: "text-muted font-weight-bold" }, [
-          _vm._v("Enter your details to create your account")
-        ])
-      ]),
+    return _c("div", { staticClass: "pb-13 pt-lg-0 pt-5" }, [
+      _c(
+        "h3",
+        {
+          staticClass:
+            "font-weight-bolder text-dark font-size-h4 font-size-h1-lg"
+        },
+        [_vm._v("Welcome to Monilog")]
+      ),
+      _vm._v(" "),
+      _c("span", { staticClass: "text-muted font-weight-bold font-size-h4" }, [
+        _vm._v("New Here?\n\t\t\t\t\t\t\t\t\t"),
+        _c(
+          "a",
+          {
+            staticClass: "text-primary font-weight-bolder",
+            attrs: { href: "javascript:;", id: "kt_login_signup" }
+          },
+          [_vm._v("Create an Account")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "d-flex justify-content-between mt-n5" }, [
+      _c(
+        "label",
+        { staticClass: "font-size-h6 font-weight-bolder text-dark pt-5" },
+        [_vm._v("Password")]
+      ),
       _vm._v(" "),
       _c(
-        "form",
+        "a",
         {
-          staticClass: "form text-left",
-          attrs: { id: "kt_login_signup_form" }
+          staticClass:
+            "text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5",
+          attrs: { href: "javascript:;", id: "kt_login_forgot" }
         },
-        [
-          _c("div", { staticClass: "form-group py-2 m-0" }, [
-            _c("input", {
-              staticClass:
-                "form-control h-auto border-0 px-0 placeholder-dark-75",
-              attrs: { type: "text", placeholder: "Fullname", name: "fullname" }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group py-2 m-0 border-top" }, [
-            _c("input", {
-              staticClass:
-                "form-control h-auto border-0 px-0 placeholder-dark-75",
-              attrs: {
-                type: "text",
-                placeholder: "Email",
-                name: "email",
-                autocomplete: "off"
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group py-2 m-0 border-top" }, [
-            _c("input", {
-              staticClass:
-                "form-control h-auto border-0 px-0 placeholder-dark-75",
-              attrs: {
-                type: "password",
-                placeholder: "Password",
-                name: "password"
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group py-2 m-0 border-top" }, [
-            _c("input", {
-              staticClass:
-                "form-control h-auto border-0 px-0 placeholder-dark-75",
-              attrs: {
-                type: "password",
-                placeholder: "Confirm Password",
-                name: "cpassword"
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group mt-5" }, [
-            _c("div", { staticClass: "checkbox-inline" }, [
-              _c(
-                "label",
-                { staticClass: "checkbox checkbox-outline font-weight-bold" },
-                [
-                  _c("input", { attrs: { type: "checkbox", name: "agree" } }),
-                  _vm._v(" "),
-                  _c("span"),
-                  _vm._v(
-                    "I Agree the\n                                        "
-                  ),
-                  _c(
-                    "a",
-                    { staticClass: "ml-1", attrs: { href: "login-6.html#" } },
-                    [_vm._v("terms and conditions")]
-                  ),
-                  _vm._v(".")
-                ]
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "form-group d-flex flex-wrap flex-center" },
-            [
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn btn-primary btn-pill font-weight-bold px-9 py-4 my-3 mx-2",
-                  attrs: { id: "kt_login_signup_submit" }
-                },
-                [_vm._v("Register")]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn btn-outline-primary btn-pill font-weight-bold px-9 py-4 my-3 mx-2",
-                  attrs: { id: "kt_login_signup_cancel" }
-                },
-                [_vm._v("Goto Login")]
-              )
-            ]
-          )
-        ]
+        [_vm._v("Forgot Password ?")]
       )
     ])
   },
@@ -62281,28 +62077,70 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "login-forgot" }, [
-      _c("div", { staticClass: "text-center mb-10 mb-lg-20" }, [
-        _c("h3", {}, [_vm._v("Forgotten Password ?")]),
-        _vm._v(" "),
-        _c("p", { staticClass: "text-muted font-weight-bold" }, [
-          _vm._v("Enter your email to reset your password")
-        ])
-      ]),
+    return _c("div", { staticClass: "pb-13 pt-lg-0 pt-5" }, [
+      _c(
+        "h3",
+        {
+          staticClass:
+            "font-weight-bolder text-dark font-size-h4 font-size-h1-lg"
+        },
+        [_vm._v("Sign Up")]
+      ),
       _vm._v(" "),
+      _c("p", { staticClass: "text-muted font-weight-bold font-size-h4" }, [
+        _vm._v("Enter your details to create your account")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c("label", { staticClass: "checkbox mb-0" }, [
+        _c("input", { attrs: { type: "checkbox", name: "agree" } }),
+        _vm._v("I Agree the "),
+        _c("a", { attrs: { href: "" } }, [_vm._v(" terms and conditions")]),
+        _vm._v(".\n                                    "),
+        _c("span")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "login-form login-forgot" }, [
       _c(
         "form",
         {
-          staticClass: "form text-left",
-          attrs: { id: "kt_login_forgot_form" }
+          staticClass: "form",
+          attrs: { novalidate: "novalidate", id: "kt_login_forgot_form" }
         },
         [
-          _c("div", { staticClass: "form-group py-2 m-0 border-bottom" }, [
+          _c("div", { staticClass: "pb-13 pt-lg-0 pt-5" }, [
+            _c(
+              "h3",
+              {
+                staticClass:
+                  "font-weight-bolder text-dark font-size-h4 font-size-h1-lg"
+              },
+              [_vm._v("Forgotten Password ?")]
+            ),
+            _vm._v(" "),
+            _c(
+              "p",
+              { staticClass: "text-muted font-weight-bold font-size-h4" },
+              [_vm._v("Enter your email to reset your password")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
             _c("input", {
               staticClass:
-                "form-control h-auto border-0 px-0 placeholder-dark-75",
+                "form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6",
               attrs: {
-                type: "text",
+                type: "email",
                 placeholder: "Email",
                 name: "email",
                 autocomplete: "off"
@@ -62310,31 +62148,27 @@ var staticRenderFns = [
             })
           ]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "form-group d-flex flex-wrap flex-center mt-10" },
-            [
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn btn-primary btn-pill font-weight-bold px-9 py-4 my-3 mx-2",
-                  attrs: { id: "kt_login_forgot_submit" }
-                },
-                [_vm._v("Submit")]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn btn-outline-primary btn-pill font-weight-bold px-9 py-4 my-3 mx-2",
-                  attrs: { id: "kt_login_forgot_cancel" }
-                },
-                [_vm._v("Cancel")]
-              )
-            ]
-          )
+          _c("div", { staticClass: "form-group d-flex flex-wrap pb-lg-0" }, [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-4",
+                attrs: { type: "button", id: "kt_login_forgot_submit" }
+              },
+              [_vm._v("Submit")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3",
+                attrs: { type: "button", id: "kt_login_forgot_cancel" }
+              },
+              [_vm._v("Cancel")]
+            )
+          ])
         ]
       )
     ])
@@ -62561,10 +62395,7 @@ var render = function() {
                         [
                           _c(
                             "a",
-                            {
-                              staticClass: "menu-link",
-                              attrs: { href: "index.html" }
-                            },
+                            { staticClass: "menu-link", attrs: { href: "" } },
                             [
                               _c(
                                 "span",
@@ -62732,5350 +62563,20 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "d-flex flex-column-fluid" }, [
                   _c("div", { staticClass: "container" }, [
-                    _c("div", { staticClass: "row" }, [
-                      _c(
-                        "div",
-                        { staticClass: "col-xxl-12 order-2 order-xxl-1" },
-                        [
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "card card-custom card-stretch gutter-b"
-                            },
-                            [
-                              _vm._m(5),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "card-body pt-2 pb-0 mt-n3" },
-                                [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass: "tab-content mt-5",
-                                      attrs: { id: "myTabTables11" }
-                                    },
-                                    [
-                                      _c(
-                                        "div",
-                                        {
-                                          staticClass: "tab-pane fade",
-                                          attrs: {
-                                            id: "kt_tab_pane_11_1",
-                                            role: "tabpanel",
-                                            "aria-labelledby":
-                                              "kt_tab_pane_11_1"
-                                          }
-                                        },
-                                        [
-                                          _c(
-                                            "div",
-                                            { staticClass: "table-responsive" },
-                                            [
-                                              _c(
-                                                "table",
-                                                {
-                                                  staticClass:
-                                                    "table table-borderless table-vertical-center"
-                                                },
-                                                [
-                                                  _vm._m(6),
-                                                  _vm._v(" "),
-                                                  _c("tbody", [
-                                                    _c("tr", [
-                                                      _vm._m(7),
-                                                      _vm._v(" "),
-                                                      _vm._m(8),
-                                                      _vm._v(" "),
-                                                      _vm._m(9),
-                                                      _vm._v(" "),
-                                                      _vm._m(10),
-                                                      _vm._v(" "),
-                                                      _vm._m(11),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(12),
-                                                      _vm._v(" "),
-                                                      _vm._m(13),
-                                                      _vm._v(" "),
-                                                      _vm._m(14),
-                                                      _vm._v(" "),
-                                                      _vm._m(15),
-                                                      _vm._v(" "),
-                                                      _vm._m(16),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(17),
-                                                      _vm._v(" "),
-                                                      _vm._m(18),
-                                                      _vm._v(" "),
-                                                      _vm._m(19),
-                                                      _vm._v(" "),
-                                                      _vm._m(20),
-                                                      _vm._v(" "),
-                                                      _vm._m(21),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(22),
-                                                      _vm._v(" "),
-                                                      _vm._m(23),
-                                                      _vm._v(" "),
-                                                      _vm._m(24),
-                                                      _vm._v(" "),
-                                                      _vm._m(25),
-                                                      _vm._v(" "),
-                                                      _vm._m(26),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(27),
-                                                      _vm._v(" "),
-                                                      _vm._m(28),
-                                                      _vm._v(" "),
-                                                      _vm._m(29),
-                                                      _vm._v(" "),
-                                                      _vm._m(30),
-                                                      _vm._v(" "),
-                                                      _vm._m(31),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ])
-                                                  ])
-                                                ]
-                                              )
-                                            ]
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "div",
-                                        {
-                                          staticClass: "tab-pane fade",
-                                          attrs: {
-                                            id: "kt_tab_pane_11_2",
-                                            role: "tabpanel",
-                                            "aria-labelledby":
-                                              "kt_tab_pane_11_2"
-                                          }
-                                        },
-                                        [
-                                          _c(
-                                            "div",
-                                            { staticClass: "table-responsive" },
-                                            [
-                                              _c(
-                                                "table",
-                                                {
-                                                  staticClass:
-                                                    "table table-borderless table-vertical-center"
-                                                },
-                                                [
-                                                  _vm._m(32),
-                                                  _vm._v(" "),
-                                                  _c("tbody", [
-                                                    _c("tr", [
-                                                      _vm._m(33),
-                                                      _vm._v(" "),
-                                                      _vm._m(34),
-                                                      _vm._v(" "),
-                                                      _vm._m(35),
-                                                      _vm._v(" "),
-                                                      _vm._m(36),
-                                                      _vm._v(" "),
-                                                      _vm._m(37),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(38),
-                                                      _vm._v(" "),
-                                                      _vm._m(39),
-                                                      _vm._v(" "),
-                                                      _vm._m(40),
-                                                      _vm._v(" "),
-                                                      _vm._m(41),
-                                                      _vm._v(" "),
-                                                      _vm._m(42),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(43),
-                                                      _vm._v(" "),
-                                                      _vm._m(44),
-                                                      _vm._v(" "),
-                                                      _vm._m(45),
-                                                      _vm._v(" "),
-                                                      _vm._m(46),
-                                                      _vm._v(" "),
-                                                      _vm._m(47),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(48),
-                                                      _vm._v(" "),
-                                                      _vm._m(49),
-                                                      _vm._v(" "),
-                                                      _vm._m(50),
-                                                      _vm._v(" "),
-                                                      _vm._m(51),
-                                                      _vm._v(" "),
-                                                      _vm._m(52),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(53),
-                                                      _vm._v(" "),
-                                                      _vm._m(54),
-                                                      _vm._v(" "),
-                                                      _vm._m(55),
-                                                      _vm._v(" "),
-                                                      _vm._m(56),
-                                                      _vm._v(" "),
-                                                      _vm._m(57),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ])
-                                                  ])
-                                                ]
-                                              )
-                                            ]
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "div",
-                                        {
-                                          staticClass:
-                                            "tab-pane fade show active",
-                                          attrs: {
-                                            id: "kt_tab_pane_11_3",
-                                            role: "tabpanel",
-                                            "aria-labelledby":
-                                              "kt_tab_pane_11_3"
-                                          }
-                                        },
-                                        [
-                                          _c(
-                                            "div",
-                                            { staticClass: "table-responsive" },
-                                            [
-                                              _c(
-                                                "table",
-                                                {
-                                                  staticClass:
-                                                    "table table-borderless table-vertical-center"
-                                                },
-                                                [
-                                                  _vm._m(58),
-                                                  _vm._v(" "),
-                                                  _c("tbody", [
-                                                    _c("tr", [
-                                                      _vm._m(59),
-                                                      _vm._v(" "),
-                                                      _vm._m(60),
-                                                      _vm._v(" "),
-                                                      _vm._m(61),
-                                                      _vm._v(" "),
-                                                      _vm._m(62),
-                                                      _vm._v(" "),
-                                                      _vm._m(63),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(64),
-                                                      _vm._v(" "),
-                                                      _vm._m(65),
-                                                      _vm._v(" "),
-                                                      _vm._m(66),
-                                                      _vm._v(" "),
-                                                      _vm._m(67),
-                                                      _vm._v(" "),
-                                                      _vm._m(68),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(69),
-                                                      _vm._v(" "),
-                                                      _vm._m(70),
-                                                      _vm._v(" "),
-                                                      _vm._m(71),
-                                                      _vm._v(" "),
-                                                      _vm._m(72),
-                                                      _vm._v(" "),
-                                                      _vm._m(73),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(74),
-                                                      _vm._v(" "),
-                                                      _vm._m(75),
-                                                      _vm._v(" "),
-                                                      _vm._m(76),
-                                                      _vm._v(" "),
-                                                      _vm._m(77),
-                                                      _vm._v(" "),
-                                                      _vm._m(78),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    _c("tr", [
-                                                      _vm._m(79),
-                                                      _vm._v(" "),
-                                                      _vm._m(80),
-                                                      _vm._v(" "),
-                                                      _vm._m(81),
-                                                      _vm._v(" "),
-                                                      _vm._m(82),
-                                                      _vm._v(" "),
-                                                      _vm._m(83),
-                                                      _vm._v(" "),
-                                                      _c(
-                                                        "td",
-                                                        {
-                                                          staticClass:
-                                                            "text-right pr-0"
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
-                                                                                fill:
-                                                                                  "#000000"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                transform:
-                                                                                  "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          ),
-                                                          _vm._v(" "),
-                                                          _c(
-                                                            "a",
-                                                            {
-                                                              staticClass:
-                                                                "btn btn-icon btn-light btn-hover-primary btn-sm",
-                                                              attrs: {
-                                                                href:
-                                                                  "index.html#"
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "span",
-                                                                {
-                                                                  staticClass:
-                                                                    "svg-icon svg-icon-md svg-icon-primary"
-                                                                },
-                                                                [
-                                                                  _c(
-                                                                    "svg",
-                                                                    {
-                                                                      attrs: {
-                                                                        xmlns:
-                                                                          "http://www.w3.org/2000/svg",
-                                                                        "xmlns:xlink":
-                                                                          "http://www.w3.org/1999/xlink",
-                                                                        width:
-                                                                          "24px",
-                                                                        height:
-                                                                          "24px",
-                                                                        viewBox:
-                                                                          "0 0 24 24",
-                                                                        version:
-                                                                          "1.1"
-                                                                      }
-                                                                    },
-                                                                    [
-                                                                      _c(
-                                                                        "g",
-                                                                        {
-                                                                          attrs: {
-                                                                            stroke:
-                                                                              "none",
-                                                                            "stroke-width":
-                                                                              "1",
-                                                                            fill:
-                                                                              "none",
-                                                                            "fill-rule":
-                                                                              "evenodd"
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _c(
-                                                                            "rect",
-                                                                            {
-                                                                              attrs: {
-                                                                                x:
-                                                                                  "0",
-                                                                                y:
-                                                                                  "0",
-                                                                                width:
-                                                                                  "24",
-                                                                                height:
-                                                                                  "24"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                "fill-rule":
-                                                                                  "nonzero"
-                                                                              }
-                                                                            }
-                                                                          ),
-                                                                          _vm._v(
-                                                                            " "
-                                                                          ),
-                                                                          _c(
-                                                                            "path",
-                                                                            {
-                                                                              attrs: {
-                                                                                d:
-                                                                                  "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
-                                                                                fill:
-                                                                                  "#000000",
-                                                                                opacity:
-                                                                                  "0.3"
-                                                                              }
-                                                                            }
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    ]
-                                                                  )
-                                                                ]
-                                                              )
-                                                            ]
-                                                          )
-                                                        ]
-                                                      )
-                                                    ])
-                                                  ])
-                                                ]
-                                              )
-                                            ]
-                                          )
-                                        ]
-                                      )
-                                    ]
-                                  )
-                                ]
-                              )
-                            ]
-                          )
-                        ]
-                      )
-                    ])
+                    _c(
+                      "div",
+                      { staticClass: "row" },
+                      [
+                        _c("LogExpenseComponent"),
+                        _vm._v(" "),
+                        _c("logs-component")
+                      ],
+                      1
+                    )
                   ])
                 ])
               ]
-            ),
-            _vm._v(" "),
-            _vm._m(84)
+            )
           ]
         )
       ])
@@ -68088,11 +62589,11 @@ var render = function() {
         attrs: { id: "kt_quick_user" }
       },
       [
-        _vm._m(85),
+        _vm._m(5),
         _vm._v(" "),
         _c("div", { staticClass: "offcanvas-content pr-5 mr-n5" }, [
           _c("div", { staticClass: "d-flex align-items-center mt-5" }, [
-            _vm._m(86),
+            _vm._m(6),
             _vm._v(" "),
             _c("div", { staticClass: "d-flex flex-column" }, [
               _c(
@@ -68100,7 +62601,7 @@ var render = function() {
                 {
                   staticClass:
                     "font-weight-bold font-size-h5 text-dark-75 text-hover-primary",
-                  attrs: { href: "index.html#" }
+                  attrs: { href: "#" }
                 },
                 [_vm._v(" " + _vm._s(_vm.user.name) + " ")]
               ),
@@ -68110,86 +62611,82 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "navi mt-2" }, [
-                _c(
-                  "a",
-                  { staticClass: "navi-item", attrs: { href: "index.html#" } },
-                  [
-                    _c("span", { staticClass: "navi-link p-0 pb-2" }, [
-                      _c("span", { staticClass: "navi-icon mr-1" }, [
-                        _c(
-                          "span",
-                          {
-                            staticClass: "svg-icon svg-icon-lg svg-icon-primary"
-                          },
-                          [
-                            _c(
-                              "svg",
-                              {
-                                attrs: {
-                                  xmlns: "http://www.w3.org/2000/svg",
-                                  "xmlns:xlink": "http://www.w3.org/1999/xlink",
-                                  width: "24px",
-                                  height: "24px",
-                                  viewBox: "0 0 24 24",
-                                  version: "1.1"
-                                }
-                              },
-                              [
-                                _c(
-                                  "g",
-                                  {
-                                    attrs: {
-                                      stroke: "none",
-                                      "stroke-width": "1",
-                                      fill: "none",
-                                      "fill-rule": "evenodd"
-                                    }
-                                  },
-                                  [
-                                    _c("rect", {
-                                      attrs: {
-                                        x: "0",
-                                        y: "0",
-                                        width: "24",
-                                        height: "24"
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("path", {
-                                      attrs: {
-                                        d:
-                                          "M21,12.0829584 C20.6747915,12.0283988 20.3407122,12 20,12 C16.6862915,12 14,14.6862915 14,18 C14,18.3407122 14.0283988,18.6747915 14.0829584,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,8 C3,6.8954305 3.8954305,6 5,6 L19,6 C20.1045695,6 21,6.8954305 21,8 L21,12.0829584 Z M18.1444251,7.83964668 L12,11.1481833 L5.85557487,7.83964668 C5.4908718,7.6432681 5.03602525,7.77972206 4.83964668,8.14442513 C4.6432681,8.5091282 4.77972206,8.96397475 5.14442513,9.16035332 L11.6444251,12.6603533 C11.8664074,12.7798822 12.1335926,12.7798822 12.3555749,12.6603533 L18.8555749,9.16035332 C19.2202779,8.96397475 19.3567319,8.5091282 19.1603533,8.14442513 C18.9639747,7.77972206 18.5091282,7.6432681 18.1444251,7.83964668 Z",
-                                        fill: "#000000"
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("circle", {
-                                      attrs: {
-                                        fill: "#000000",
-                                        opacity: "0.3",
-                                        cx: "19.5",
-                                        cy: "17.5",
-                                        r: "2.5"
-                                      }
-                                    })
-                                  ]
-                                )
-                              ]
-                            )
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
+                _c("a", { staticClass: "navi-item", attrs: { href: "#" } }, [
+                  _c("span", { staticClass: "navi-link p-0 pb-2" }, [
+                    _c("span", { staticClass: "navi-icon mr-1" }, [
                       _c(
                         "span",
                         {
-                          staticClass: "navi-text text-muted text-hover-primary"
+                          staticClass: "svg-icon svg-icon-lg svg-icon-primary"
                         },
-                        [_vm._v(_vm._s(_vm.user.email))]
+                        [
+                          _c(
+                            "svg",
+                            {
+                              attrs: {
+                                xmlns: "http://www.w3.org/2000/svg",
+                                "xmlns:xlink": "http://www.w3.org/1999/xlink",
+                                width: "24px",
+                                height: "24px",
+                                viewBox: "0 0 24 24",
+                                version: "1.1"
+                              }
+                            },
+                            [
+                              _c(
+                                "g",
+                                {
+                                  attrs: {
+                                    stroke: "none",
+                                    "stroke-width": "1",
+                                    fill: "none",
+                                    "fill-rule": "evenodd"
+                                  }
+                                },
+                                [
+                                  _c("rect", {
+                                    attrs: {
+                                      x: "0",
+                                      y: "0",
+                                      width: "24",
+                                      height: "24"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("path", {
+                                    attrs: {
+                                      d:
+                                        "M21,12.0829584 C20.6747915,12.0283988 20.3407122,12 20,12 C16.6862915,12 14,14.6862915 14,18 C14,18.3407122 14.0283988,18.6747915 14.0829584,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,8 C3,6.8954305 3.8954305,6 5,6 L19,6 C20.1045695,6 21,6.8954305 21,8 L21,12.0829584 Z M18.1444251,7.83964668 L12,11.1481833 L5.85557487,7.83964668 C5.4908718,7.6432681 5.03602525,7.77972206 4.83964668,8.14442513 C4.6432681,8.5091282 4.77972206,8.96397475 5.14442513,9.16035332 L11.6444251,12.6603533 C11.8664074,12.7798822 12.1335926,12.7798822 12.3555749,12.6603533 L18.8555749,9.16035332 C19.2202779,8.96397475 19.3567319,8.5091282 19.1603533,8.14442513 C18.9639747,7.77972206 18.5091282,7.6432681 18.1444251,7.83964668 Z",
+                                      fill: "#000000"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("circle", {
+                                    attrs: {
+                                      fill: "#000000",
+                                      opacity: "0.3",
+                                      cx: "19.5",
+                                      cy: "17.5",
+                                      r: "2.5"
+                                    }
+                                  })
+                                ]
+                              )
+                            ]
+                          )
+                        ]
                       )
-                    ])
-                  ]
-                ),
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass: "navi-text text-muted text-hover-primary"
+                      },
+                      [_vm._v(_vm._s(_vm.user.email))]
+                    )
+                  ])
+                ]),
                 _vm._v(" "),
                 _c(
                   "a",
@@ -68273,9 +62770,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("a", { attrs: { href: "index.html" } }, [
+    return _c("a", { attrs: { href: "" } }, [
       _c("img", {
-        attrs: { alt: "Logo", src: "/assets/media/logos/logo-light.png" }
+        attrs: { alt: "Logo", src: "/images/logo.png", width: "80px" }
       })
     ])
   },
@@ -68309,15 +62806,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      { staticClass: "brand-logo", attrs: { href: "index.html" } },
-      [
-        _c("img", {
-          attrs: { alt: "Logo", src: "/assets/media/logos/logo-light.png" }
-        })
-      ]
-    )
+    return _c("a", { staticClass: "brand-logo", attrs: { href: "" } }, [
+      _c("img", {
+        attrs: { alt: "Logo", src: "/images/logo.png", width: "100px" }
+      })
+    ])
   },
   function() {
     var _vm = this
@@ -68353,11 +62846,15 @@ var staticRenderFns = [
                 }),
                 _vm._v(" "),
                 _c(
-                  "a",
+                  "button",
                   {
                     staticClass:
                       "btn btn-light-warning font-weight-bolder btn-sm",
-                    attrs: { href: "" }
+                    attrs: {
+                      type: "button",
+                      "data-toggle": "modal",
+                      "data-target": "#logExpenseModal"
+                    }
                   },
                   [_vm._v("Add New")]
                 )
@@ -68370,7 +62867,7 @@ var staticRenderFns = [
                 {
                   staticClass: "btn btn-sm btn-light font-weight-bold mr-2",
                   attrs: {
-                    href: "index.html#",
+                    href: "#",
                     id: "kt_dashboard_daterangepicker",
                     "data-toggle": "tooltip",
                     title: "Select dashboard daterange",
@@ -68388,1445 +62885,12 @@ var staticRenderFns = [
                     [_vm._v("Today")]
                   ),
                   _vm._v(" "),
-                  _c(
-                    "span",
-                    {
-                      staticClass:
-                        "text-primary font-size-base font-weight-bolder",
-                      attrs: { id: "kt_dashboard_daterangepicker_date" }
-                    },
-                    [_vm._v("Aug 16")]
-                  )
+                  _c("span", {
+                    staticClass:
+                      "text-primary font-size-base font-weight-bolder",
+                    attrs: { id: "kt_dashboard_daterangepicker_date" }
+                  })
                 ]
-              )
-            ])
-          ]
-        )
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header border-0 pt-5" }, [
-      _c("h3", { staticClass: "card-title align-items-start flex-column" }, [
-        _c("span", { staticClass: "card-label font-weight-bolder text-dark" }, [
-          _vm._v("New Arrivals")
-        ]),
-        _vm._v(" "),
-        _c(
-          "span",
-          { staticClass: "text-muted mt-3 font-weight-bold font-size-sm" },
-          [_vm._v("More than 400+ new members")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-toolbar" }, [
-        _c("ul", { staticClass: "nav nav-pills nav-pills-sm nav-dark-75" }, [
-          _c("li", { staticClass: "nav-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "nav-link py-2 px-4",
-                attrs: {
-                  "data-toggle": "tab",
-                  href: "index.html#kt_tab_pane_11_1"
-                }
-              },
-              [_vm._v("Month")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "nav-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "nav-link py-2 px-4",
-                attrs: {
-                  "data-toggle": "tab",
-                  href: "index.html#kt_tab_pane_11_2"
-                }
-              },
-              [_vm._v("Week")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "nav-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "nav-link py-2 px-4 active",
-                attrs: {
-                  "data-toggle": "tab",
-                  href: "index.html#kt_tab_pane_11_3"
-                }
-              },
-              [_vm._v("Day")]
-            )
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { staticClass: "p-0 w-40px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-200px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-100px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-125px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-110px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-150px" })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/003-puzzle.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("Payrol Application")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("company@dev.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$560,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("Laravel, Metronic")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-success label-inline" },
-        [_vm._v("Success")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/005-bebo.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("HR Management System")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("hr@demo.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$57,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("AngularJS, C#")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-danger label-inline" },
-        [_vm._v("Rejected")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: {
-              src: "/assets/media/svg/misc/014-kickstarter.svg",
-              alt: ""
-            }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("KTR Mobile Application")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("ktr@demo.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$45,200,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("ReactJS, Ruby")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-warning label-inline" },
-        [_vm._v("In Progress")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light mr-1" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/006-plurk.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("Sant Outstanding")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("bprow@bnc.cc")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$2,000,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("ReactJs, HTML")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-primary label-inline" },
-        [_vm._v("Approved")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/015-telegram.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("Application Development")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("app@dev.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$4,600,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("Python, MySQL")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-warning label-inline" },
-        [_vm._v("In Progress")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { staticClass: "p-0 w-40px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-200px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-100px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-125px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-110px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-150px" })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/015-telegram.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("Application Development")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("app@dev.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$4,600,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("Python, MySQL")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-warning label-inline" },
-        [_vm._v("In Progress")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/003-puzzle.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("Payrol Application")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("company@dev.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$560,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("Laravel, Metronic")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-success label-inline" },
-        [_vm._v("Success")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/005-bebo.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("HR Management System")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("hr@demo.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$57,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("AngularJS, C#")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-danger label-inline" },
-        [_vm._v("Rejected")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light mr-1" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/006-plurk.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("Sant Outstanding")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("bprow@bnc.cc")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$2,000,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("ReactJs, HTML")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-primary label-inline" },
-        [_vm._v("Approved")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: {
-              src: "/assets/media/svg/misc/014-kickstarter.svg",
-              alt: ""
-            }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("KTR Mobile Application")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("ktr@demo.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$45,200,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("ReactJS, Ruby")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-warning label-inline" },
-        [_vm._v("In Progress")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { staticClass: "p-0 w-40px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-200px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-100px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-125px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-110px" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "p-0 min-w-150px" })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light mr-1" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/006-plurk.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("Sant Outstanding")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("bprow@bnc.cc")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$2,000,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("ReactJs, HTML")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-primary label-inline" },
-        [_vm._v("Approved")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/015-telegram.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("Application Development")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("app@dev.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$4,600,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("Python, MySQL")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-warning label-inline" },
-        [_vm._v("In Progress")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/003-puzzle.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("Payrol Application")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("company@dev.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$560,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("Laravel, Metronic")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-success label-inline" },
-        [_vm._v("Success")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: { src: "/assets/media/svg/misc/005-bebo.svg", alt: "" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("HR Management System")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("hr@demo.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$57,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("AngularJS, C#")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-danger label-inline" },
-        [_vm._v("Rejected")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0 py-4" }, [
-      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
-        _c("span", { staticClass: "symbol-label" }, [
-          _c("img", {
-            staticClass: "h-50 align-self-center",
-            attrs: {
-              src: "/assets/media/svg/misc/014-kickstarter.svg",
-              alt: ""
-            }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "pl-0" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
-          attrs: { href: "index.html#" }
-        },
-        [_vm._v("KTR Mobile Application")]
-      ),
-      _vm._v(" "),
-      _c("div", [
-        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "text-muted font-weight-bold text-hover-primary",
-            attrs: { href: "index.html#" }
-          },
-          [_vm._v("ktr@demo.com")]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
-        [_vm._v("$45,200,000")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "text-muted font-weight-bold" }, [
-        _vm._v("Paid")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c("span", { staticClass: "text-muted font-weight-500" }, [
-        _vm._v("ReactJS, Ruby")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-right" }, [
-      _c(
-        "span",
-        { staticClass: "label label-lg label-light-warning label-inline" },
-        [_vm._v("In Progress")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "footer bg-white py-4 d-flex flex-lg-column",
-        attrs: { id: "kt_footer" }
-      },
-      [
-        _c(
-          "div",
-          {
-            staticClass:
-              "container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between"
-          },
-          [
-            _c("div", { staticClass: "text-dark order-2 order-md-1" }, [
-              _c("span", { staticClass: "text-muted font-weight-bold mr-2" }, [
-                _vm._v("2020©")
-              ]),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "text-dark-75 text-hover-primary",
-                  attrs: { href: "", target: "_blank" }
-                },
-                [_vm._v("Keenthemes")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "nav nav-dark" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "nav-link pl-0 pr-5",
-                  attrs: { href: "", target: "_blank" }
-                },
-                [_vm._v("About")]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "nav-link pl-0 pr-5",
-                  attrs: { href: "", target: "_blank" }
-                },
-                [_vm._v("Team")]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "nav-link pl-0 pr-0",
-                  attrs: { href: "", target: "_blank" }
-                },
-                [_vm._v("Contact")]
               )
             ])
           ]
@@ -69846,17 +62910,14 @@ var staticRenderFns = [
       },
       [
         _c("h3", { staticClass: "font-weight-bold m-0" }, [
-          _vm._v("User Profile\n                    "),
-          _c("small", { staticClass: "text-muted font-size-sm ml-2" }, [
-            _vm._v("12 messages")
-          ])
+          _vm._v("User Profile")
         ]),
         _vm._v(" "),
         _c(
           "a",
           {
             staticClass: "btn btn-xs btn-icon btn-light btn-hover-primary",
-            attrs: { href: "index.html#", id: "kt_quick_user_close" }
+            attrs: { href: "#", id: "kt_quick_user_close" }
           },
           [_c("i", { staticClass: "ki ki-close icon-xs text-muted" })]
         )
@@ -69876,6 +62937,272 @@ var staticRenderFns = [
       }),
       _vm._v(" "),
       _c("i", { staticClass: "symbol-badge bg-success" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LogExpenseComponent.vue?vue&type=template&id=a3780f64&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LogExpenseComponent.vue?vue&type=template&id=a3780f64&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "logExpenseModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "logExpenseModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("form", { staticClass: "form" }, [
+                  _c("div", { staticClass: "card-body" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.log_title,
+                            expression: "log_title"
+                          }
+                        ],
+                        staticClass:
+                          "form-control form-control-lg form-control-solid",
+                        attrs: {
+                          type: "text",
+                          placeholder: "Spent some cash today? Log it here",
+                          required: ""
+                        },
+                        domProps: { value: _vm.log_title },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.log_title = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("div", { staticClass: "input-group input-group-lg" }, [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.log_amount,
+                              expression: "log_amount"
+                            }
+                          ],
+                          staticClass: "form-control form-control-solid",
+                          attrs: {
+                            type: "number",
+                            min: "100",
+                            placeholder: "Amount Spent"
+                          },
+                          domProps: { value: _vm.log_amount },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.log_amount = $event.target.value
+                            }
+                          }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("div", { staticClass: "checkbox-list" }, [
+                        _c("label", { staticClass: "checkbox" }, [
+                          _c("input", {
+                            attrs: { type: "checkbox" },
+                            on: {
+                              click: function($event) {
+                                _vm.show_log_details = !_vm.show_log_details
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span"),
+                          _vm._v(
+                            "\n                                            Add More Info\n                                        "
+                          )
+                        ])
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.show_log_details,
+                            expression: "show_log_details"
+                          }
+                        ]
+                      },
+                      [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.log_description,
+                                expression: "log_description"
+                              }
+                            ],
+                            staticClass: "form-control form-control-solid",
+                            attrs: {
+                              placeholder: "Have more detail for your expense?",
+                              required: ""
+                            },
+                            domProps: { value: _vm.log_description },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.log_description = $event.target.value
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.log_date,
+                                expression: "log_date"
+                              }
+                            ],
+                            staticClass: "form-control form-control-solid",
+                            attrs: {
+                              type: "date",
+                              placeholder: "Date spent",
+                              required: ""
+                            },
+                            domProps: { value: _vm.log_date },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.log_date = $event.target.value
+                              }
+                            }
+                          })
+                        ])
+                      ]
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary font-weight-bold",
+                    attrs: { type: "button" },
+                    on: { click: _vm.submitLog }
+                  },
+                  [_vm._v("Save")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default font-weight-bold",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Log an Expense")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [
+          _c("i", {
+            staticClass: "ki ki-close",
+            attrs: { "aria-hidden": "true" }
+          })
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text" }, [_vm._v("₦")])
     ])
   }
 ]
@@ -70267,127 +63594,1824 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-6" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [
-            _vm._v("Today's Log "),
-            _c("strong", [
-              _vm._v(
-                "( " + _vm._s("₦" + _vm.todaysTotalLog.toLocaleString()) + " )"
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            !_vm.todaysLogs.length
-              ? _c("p", { staticClass: "text-center" }, [_vm._m(0)])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.todaysLogs.length
-              ? _c(
-                  "ol",
-                  { staticClass: "log-list" },
-                  _vm._l(_vm.todaysLogs, function(log) {
-                    return _c("li", [
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(log.title) +
-                          " - " +
-                          _vm._s("₦" + log.amount.toLocaleString()) +
-                          "\n                            "
-                      ),
-                      _c("small", [
-                        _vm._v(
-                          "(" +
-                            _vm._s(
-                              _vm._f("formatShortWordDate")(log.date_logged)
-                            ) +
-                            ")"
-                        )
-                      ]),
-                      _vm._v(" "),
-                      log.description
-                        ? _c(
-                            "p",
-                            {
-                              staticClass:
-                                "description badge badge-warning text-left"
-                            },
+  return _c("div", [
+    _c("div", { staticClass: "col-xxl-12 order-2 order-xxl-1" }, [
+      _c("div", { staticClass: "card card-custom card-stretch gutter-b" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body pt-2 pb-0 mt-n3" }, [
+          _c(
+            "div",
+            { staticClass: "tab-content mt-5", attrs: { id: "myTabTables11" } },
+            [
+              _c(
+                "div",
+                {
+                  staticClass: "tab-pane fade",
+                  attrs: {
+                    id: "kt_tab_pane_11_1",
+                    role: "tabpanel",
+                    "aria-labelledby": "kt_tab_pane_11_1"
+                  }
+                },
+                [
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "table table-head-custom table-head-bg table-borderless table-vertical-centerr"
+                      },
+                      [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.currentMonthsLogs, function(log) {
+                            return _c("tr", [
+                              _vm._m(2, true),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "pl-0" }, [
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass:
+                                      "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
+                                    attrs: { href: "#" }
+                                  },
+                                  [_vm._v(_vm._s(log.title))]
+                                ),
+                                _vm._v(" "),
+                                _c("div", [
+                                  _c(
+                                    "span",
+                                    { staticClass: "font-weight-lighter" },
+                                    [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm._f("formatShortWordDate")(
+                                            log.date_logged
+                                          )
+                                        )
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "text-right" }, [
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass:
+                                      "text-dark-75 font-weight-bolder d-block font-size-lg"
+                                  },
+                                  [
+                                    _vm._v(
+                                      _vm._s("₦" + log.amount.toLocaleString())
+                                    )
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "text-left" }, [
+                                _c(
+                                  "span",
+                                  { staticClass: "text-muted font-weight-500" },
+                                  [_vm._v(_vm._s(log.description))]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(3, true),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "text-right pr-0" }, [
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass:
+                                      "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
+                                    attrs: { href: "#" }
+                                  },
+                                  [
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass:
+                                          "svg-icon svg-icon-md svg-icon-primary"
+                                      },
+                                      [
+                                        _c(
+                                          "svg",
+                                          {
+                                            attrs: {
+                                              xmlns:
+                                                "http://www.w3.org/2000/svg",
+                                              "xmlns:xlink":
+                                                "http://www.w3.org/1999/xlink",
+                                              width: "24px",
+                                              height: "24px",
+                                              viewBox: "0 0 24 24",
+                                              version: "1.1"
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "g",
+                                              {
+                                                attrs: {
+                                                  stroke: "none",
+                                                  "stroke-width": "1",
+                                                  fill: "none",
+                                                  "fill-rule": "evenodd"
+                                                }
+                                              },
+                                              [
+                                                _c("rect", {
+                                                  attrs: {
+                                                    x: "0",
+                                                    y: "0",
+                                                    width: "24",
+                                                    height: "24"
+                                                  }
+                                                }),
+                                                _vm._v(" "),
+                                                _c("path", {
+                                                  attrs: {
+                                                    d:
+                                                      "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
+                                                    fill: "#000000",
+                                                    "fill-rule": "nonzero",
+                                                    transform:
+                                                      "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
+                                                  }
+                                                }),
+                                                _vm._v(" "),
+                                                _c("path", {
+                                                  attrs: {
+                                                    d:
+                                                      "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
+                                                    fill: "#000000",
+                                                    "fill-rule": "nonzero",
+                                                    opacity: "0.3"
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass:
+                                      "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                    attrs: { href: "#" }
+                                  },
+                                  [
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass:
+                                          "svg-icon svg-icon-md svg-icon-primary"
+                                      },
+                                      [
+                                        _c(
+                                          "svg",
+                                          {
+                                            attrs: {
+                                              xmlns:
+                                                "http://www.w3.org/2000/svg",
+                                              "xmlns:xlink":
+                                                "http://www.w3.org/1999/xlink",
+                                              width: "24px",
+                                              height: "24px",
+                                              viewBox: "0 0 24 24",
+                                              version: "1.1"
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "g",
+                                              {
+                                                attrs: {
+                                                  stroke: "none",
+                                                  "stroke-width": "1",
+                                                  fill: "none",
+                                                  "fill-rule": "evenodd"
+                                                }
+                                              },
+                                              [
+                                                _c("rect", {
+                                                  attrs: {
+                                                    x: "0",
+                                                    y: "0",
+                                                    width: "24",
+                                                    height: "24"
+                                                  }
+                                                }),
+                                                _vm._v(" "),
+                                                _c("path", {
+                                                  attrs: {
+                                                    d:
+                                                      "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
+                                                    fill: "#000000",
+                                                    "fill-rule": "nonzero"
+                                                  }
+                                                }),
+                                                _vm._v(" "),
+                                                _c("path", {
+                                                  attrs: {
+                                                    d:
+                                                      "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
+                                                    fill: "#000000",
+                                                    opacity: "0.3"
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ])
+                            ])
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c("tfoot", [
+                          _c(
+                            "tr",
+                            { staticClass: "text-left text-uppercase" },
                             [
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(log.description) +
-                                  "\n                            "
-                              )
+                              _c("td", { staticClass: "w-40px" }),
+                              _vm._v(" "),
+                              _c(
+                                "td",
+                                {
+                                  staticClass:
+                                    "min-w-200px font-weight-bolder font-size-lg"
+                                },
+                                [_vm._v("TOTAL AMOUNT")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "td",
+                                {
+                                  staticClass:
+                                    "min-w-100px font-weight-bolder font-size-lg"
+                                },
+                                [
+                                  _vm._v(
+                                    "₦ " +
+                                      _vm._s(
+                                        _vm.currentMonthsTotalLog.toLocaleString()
+                                      )
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "min-w-125px" }),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "min-w-110px" }),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "min-w-150px" })
                             ]
                           )
-                        : _vm._e()
-                    ])
-                  }),
-                  0
-                )
-              : _vm._e()
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-6" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [
-            _vm._v("This Month's Log "),
-            _c("strong", [
-              _vm._v(
-                "( " +
-                  _vm._s("₦" + _vm.currentMonthsTotalLog.toLocaleString()) +
-                  "  )"
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c(
-              "ol",
-              { staticClass: "log-list" },
-              _vm._l(_vm.currentMonthsLogs, function(log) {
-                return _c("li", [
-                  _vm._v(
-                    "\n                            " +
-                      _vm._s(log.title) +
-                      " - " +
-                      _vm._s("₦" + log.amount.toLocaleString()) +
-                      "\n                            "
-                  ),
-                  _c("small", [
-                    _vm._v(
-                      "(" +
-                        _vm._s(_vm._f("formatShortWordDate")(log.date_logged)) +
-                        ")"
+                        ])
+                      ]
                     )
-                  ]),
-                  _vm._v(" "),
-                  log.description
-                    ? _c(
-                        "span",
-                        {
-                          staticClass:
-                            "description badge badge-warning text-left"
-                        },
-                        [
-                          _vm._v(
-                            "\n                                " +
-                              _vm._s(log.description) +
-                              "\n                            "
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "tab-pane fade",
+                  attrs: {
+                    id: "kt_tab_pane_11_2",
+                    role: "tabpanel",
+                    "aria-labelledby": "kt_tab_pane_11_2"
+                  }
+                },
+                [
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "table table-borderless table-vertical-center"
+                      },
+                      [
+                        _vm._m(4),
+                        _vm._v(" "),
+                        _c("tbody", [
+                          _c("tr", [
+                            _vm._m(5),
+                            _vm._v(" "),
+                            _vm._m(6),
+                            _vm._v(" "),
+                            _vm._m(7),
+                            _vm._v(" "),
+                            _vm._m(8),
+                            _vm._v(" "),
+                            _vm._m(9),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-right pr-0" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
+                                                  fill: "#000000"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
+                                                  fill: "#000000",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero",
+                                                  transform:
+                                                    "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
+                                                  fill: "#000000",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _vm._m(10),
+                            _vm._v(" "),
+                            _vm._m(11),
+                            _vm._v(" "),
+                            _vm._m(12),
+                            _vm._v(" "),
+                            _vm._m(13),
+                            _vm._v(" "),
+                            _vm._m(14),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-right pr-0" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
+                                                  fill: "#000000"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
+                                                  fill: "#000000",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero",
+                                                  transform:
+                                                    "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
+                                                  fill: "#000000",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _vm._m(15),
+                            _vm._v(" "),
+                            _vm._m(16),
+                            _vm._v(" "),
+                            _vm._m(17),
+                            _vm._v(" "),
+                            _vm._m(18),
+                            _vm._v(" "),
+                            _vm._m(19),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-right pr-0" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
+                                                  fill: "#000000"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
+                                                  fill: "#000000",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero",
+                                                  transform:
+                                                    "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
+                                                  fill: "#000000",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _vm._m(20),
+                            _vm._v(" "),
+                            _vm._m(21),
+                            _vm._v(" "),
+                            _vm._m(22),
+                            _vm._v(" "),
+                            _vm._m(23),
+                            _vm._v(" "),
+                            _vm._m(24),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-right pr-0" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
+                                                  fill: "#000000"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
+                                                  fill: "#000000",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero",
+                                                  transform:
+                                                    "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
+                                                  fill: "#000000",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("tr", [
+                            _vm._m(25),
+                            _vm._v(" "),
+                            _vm._m(26),
+                            _vm._v(" "),
+                            _vm._m(27),
+                            _vm._v(" "),
+                            _vm._m(28),
+                            _vm._v(" "),
+                            _vm._m(29),
+                            _vm._v(" "),
+                            _c("td", { staticClass: "text-right pr-0" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z",
+                                                  fill: "#000000"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z",
+                                                  fill: "#000000",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero",
+                                                  transform:
+                                                    "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                  attrs: { href: "#" }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "svg-icon svg-icon-md svg-icon-primary"
+                                    },
+                                    [
+                                      _c(
+                                        "svg",
+                                        {
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            "xmlns:xlink":
+                                              "http://www.w3.org/1999/xlink",
+                                            width: "24px",
+                                            height: "24px",
+                                            viewBox: "0 0 24 24",
+                                            version: "1.1"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "g",
+                                            {
+                                              attrs: {
+                                                stroke: "none",
+                                                "stroke-width": "1",
+                                                fill: "none",
+                                                "fill-rule": "evenodd"
+                                              }
+                                            },
+                                            [
+                                              _c("rect", {
+                                                attrs: {
+                                                  x: "0",
+                                                  y: "0",
+                                                  width: "24",
+                                                  height: "24"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
+                                                  fill: "#000000",
+                                                  "fill-rule": "nonzero"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
+                                                  fill: "#000000",
+                                                  opacity: "0.3"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ])
+                        ])
+                      ]
+                    )
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "tab-pane fade show active",
+                  attrs: {
+                    id: "kt_tab_pane_11_3",
+                    role: "tabpanel",
+                    "aria-labelledby": "kt_tab_pane_11_3"
+                  }
+                },
+                [
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c(
+                      "table",
+                      {
+                        staticClass:
+                          "table table-head-custom table-head-bg table-borderless table-vertical-center"
+                      },
+                      [
+                        _vm._m(30),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.todaysLogs, function(log) {
+                            return _c("tr", { staticClass: "log-list" }, [
+                              _vm._m(31, true),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "pl-0" }, [
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass:
+                                      "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
+                                    attrs: { href: "#" }
+                                  },
+                                  [_vm._v(_vm._s(log.title))]
+                                ),
+                                _vm._v(" "),
+                                _c("div", [
+                                  _c(
+                                    "span",
+                                    { staticClass: "font-weight-lighter" },
+                                    [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm._f("formatShortWordDate")(
+                                            log.date_logged
+                                          )
+                                        )
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "text-" }, [
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass:
+                                      "text-dark-75 font-weight-bolder d-block font-size-lg"
+                                  },
+                                  [
+                                    _vm._v(
+                                      "₦ " + _vm._s(log.amount.toLocaleString())
+                                    )
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "text-left" }, [
+                                _c(
+                                  "span",
+                                  { staticClass: "text-muted font-weight-500" },
+                                  [_vm._v(_vm._s(log.description))]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(32, true),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "text-left pr-0" }, [
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass:
+                                      "btn btn-icon btn-light btn-hover-primary btn-sm mx-3",
+                                    attrs: { href: "#" }
+                                  },
+                                  [
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass:
+                                          "svg-icon svg-icon-md svg-icon-primary"
+                                      },
+                                      [
+                                        _c(
+                                          "svg",
+                                          {
+                                            attrs: {
+                                              xmlns:
+                                                "http://www.w3.org/2000/svg",
+                                              "xmlns:xlink":
+                                                "http://www.w3.org/1999/xlink",
+                                              width: "24px",
+                                              height: "24px",
+                                              viewBox: "0 0 24 24",
+                                              version: "1.1"
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "g",
+                                              {
+                                                attrs: {
+                                                  stroke: "none",
+                                                  "stroke-width": "1",
+                                                  fill: "none",
+                                                  "fill-rule": "evenodd"
+                                                }
+                                              },
+                                              [
+                                                _c("rect", {
+                                                  attrs: {
+                                                    x: "0",
+                                                    y: "0",
+                                                    width: "24",
+                                                    height: "24"
+                                                  }
+                                                }),
+                                                _vm._v(" "),
+                                                _c("path", {
+                                                  attrs: {
+                                                    d:
+                                                      "M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z",
+                                                    fill: "#000000",
+                                                    "fill-rule": "nonzero",
+                                                    transform:
+                                                      "translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953)"
+                                                  }
+                                                }),
+                                                _vm._v(" "),
+                                                _c("path", {
+                                                  attrs: {
+                                                    d:
+                                                      "M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z",
+                                                    fill: "#000000",
+                                                    "fill-rule": "nonzero",
+                                                    opacity: "0.3"
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass:
+                                      "btn btn-icon btn-light btn-hover-primary btn-sm",
+                                    attrs: { href: "#" }
+                                  },
+                                  [
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass:
+                                          "svg-icon svg-icon-md svg-icon-primary"
+                                      },
+                                      [
+                                        _c(
+                                          "svg",
+                                          {
+                                            attrs: {
+                                              xmlns:
+                                                "http://www.w3.org/2000/svg",
+                                              "xmlns:xlink":
+                                                "http://www.w3.org/1999/xlink",
+                                              width: "24px",
+                                              height: "24px",
+                                              viewBox: "0 0 24 24",
+                                              version: "1.1"
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "g",
+                                              {
+                                                attrs: {
+                                                  stroke: "none",
+                                                  "stroke-width": "1",
+                                                  fill: "none",
+                                                  "fill-rule": "evenodd"
+                                                }
+                                              },
+                                              [
+                                                _c("rect", {
+                                                  attrs: {
+                                                    x: "0",
+                                                    y: "0",
+                                                    width: "24",
+                                                    height: "24"
+                                                  }
+                                                }),
+                                                _vm._v(" "),
+                                                _c("path", {
+                                                  attrs: {
+                                                    d:
+                                                      "M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z",
+                                                    fill: "#000000",
+                                                    "fill-rule": "nonzero"
+                                                  }
+                                                }),
+                                                _vm._v(" "),
+                                                _c("path", {
+                                                  attrs: {
+                                                    d:
+                                                      "M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z",
+                                                    fill: "#000000",
+                                                    opacity: "0.3"
+                                                  }
+                                                })
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ])
+                            ])
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c("tfoot", [
+                          _c(
+                            "tr",
+                            { staticClass: "text-left text-uppercase" },
+                            [
+                              _c("td", { staticClass: "w-40px" }),
+                              _vm._v(" "),
+                              _c(
+                                "td",
+                                {
+                                  staticClass:
+                                    "min-w-200px font-weight-bolder font-size-lg"
+                                },
+                                [_vm._v("TOTAL AMOUNT")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "td",
+                                {
+                                  staticClass:
+                                    "min-w-100px font-weight-bolder font-size-lg"
+                                },
+                                [
+                                  _vm._v(
+                                    "₦ " +
+                                      _vm._s(
+                                        _vm.todaysTotalLog.toLocaleString()
+                                      )
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "min-w-125px" }),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "min-w-110px" }),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "min-w-150px" })
+                            ]
                           )
-                        ]
-                      )
-                    : _vm._e()
-                ])
-              }),
-              0
-            )
-          ])
+                        ])
+                      ]
+                    )
+                  ])
+                ]
+              )
+            ]
+          )
         ])
       ])
     ])
@@ -70398,12 +65422,571 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("em", [
-      _vm._v(
-        "\n                            You're yet to log any expense for today. "
+    return _c("div", { staticClass: "card-header border-0 pt-5" }, [
+      _c("h3", { staticClass: "card-title align-items-start flex-column" }, [
+        _c("span", { staticClass: "card-label font-weight-bolder text-dark" }, [
+          _vm._v("Expense Logs")
+        ]),
+        _vm._v(" "),
+        _c(
+          "span",
+          { staticClass: "text-muted mt-3 font-weight-bold font-size-sm" },
+          [_vm._v("See all your logged expenses here")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-toolbar" }, [
+        _c("ul", { staticClass: "nav nav-pills nav-pills-sm nav-dark-75" }, [
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link py-2 px-4",
+                attrs: { "data-toggle": "tab", href: "#kt_tab_pane_11_1" }
+              },
+              [_vm._v("Month")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link py-2 px-4 active",
+                attrs: { "data-toggle": "tab", href: "#kt_tab_pane_11_3" }
+              },
+              [_vm._v("Day")]
+            )
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", { staticClass: "text-left text-uppercase" }, [
+        _c("th", { staticClass: "w-40px" }),
+        _vm._v(" "),
+        _c("th", { staticClass: "min-w-200px" }, [_vm._v("Item")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "min-w-100px" }, [_vm._v("Amount")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "min-w-125px" }, [_vm._v("Description")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "min-w-110px" }, [_vm._v("Category")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "min-w-150px" }, [_vm._v("Action")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0 py-4" }, [
+      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
+        _c("span", { staticClass: "symbol-label" }, [
+          _c("img", {
+            staticClass: "h-50 align-self-center",
+            attrs: { src: "/assets/media/svg/misc/003-puzzle.svg", alt: "" }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "label label-lg label-light-success label-inline" },
+        [_vm._v("Success")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { staticClass: "p-0 w-40px" }),
+        _vm._v(" "),
+        _c("th", { staticClass: "p-0 min-w-200px" }),
+        _vm._v(" "),
+        _c("th", { staticClass: "p-0 min-w-100px" }),
+        _vm._v(" "),
+        _c("th", { staticClass: "p-0 min-w-125px" }),
+        _vm._v(" "),
+        _c("th", { staticClass: "p-0 min-w-110px" }),
+        _vm._v(" "),
+        _c("th", { staticClass: "p-0 min-w-150px" })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0 py-4" }, [
+      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
+        _c("span", { staticClass: "symbol-label" }, [
+          _c("img", {
+            staticClass: "h-50 align-self-center",
+            attrs: { src: "/assets/media/svg/misc/015-telegram.svg", alt: "" }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0" }, [
+      _c(
+        "a",
+        {
+          staticClass:
+            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
+          attrs: { href: "#" }
+        },
+        [_vm._v("Application Development")]
       ),
-      _c("br"),
-      _vm._v("Sure you haven't made any?\n                        ")
+      _vm._v(" "),
+      _c("div", [
+        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "text-muted font-weight-bold text-hover-primary",
+            attrs: { href: "#" }
+          },
+          [_vm._v("app@dev.com")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
+        [_vm._v("$4,600,000")]
+      ),
+      _vm._v(" "),
+      _c("span", { staticClass: "text-muted font-weight-bold" }, [
+        _vm._v("Paid")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c("span", { staticClass: "text-muted font-weight-500" }, [
+        _vm._v("Python, MySQL")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "label label-lg label-light-warning label-inline" },
+        [_vm._v("In Progress")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0 py-4" }, [
+      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
+        _c("span", { staticClass: "symbol-label" }, [
+          _c("img", {
+            staticClass: "h-50 align-self-center",
+            attrs: { src: "/assets/media/svg/misc/003-puzzle.svg", alt: "" }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0" }, [
+      _c(
+        "a",
+        {
+          staticClass:
+            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
+          attrs: { href: "#" }
+        },
+        [_vm._v("Payrol Application")]
+      ),
+      _vm._v(" "),
+      _c("div", [
+        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "text-muted font-weight-bold text-hover-primary",
+            attrs: { href: "#" }
+          },
+          [_vm._v("company@dev.com")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
+        [_vm._v("$560,000")]
+      ),
+      _vm._v(" "),
+      _c("span", { staticClass: "text-muted font-weight-bold" }, [
+        _vm._v("Paid")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c("span", { staticClass: "text-muted font-weight-500" }, [
+        _vm._v("Laravel, Metronic")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "label label-lg label-light-success label-inline" },
+        [_vm._v("Data")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0 py-4" }, [
+      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
+        _c("span", { staticClass: "symbol-label" }, [
+          _c("img", {
+            staticClass: "h-50 align-self-center",
+            attrs: { src: "/assets/media/svg/misc/005-bebo.svg", alt: "" }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0" }, [
+      _c(
+        "a",
+        {
+          staticClass:
+            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
+          attrs: { href: "#" }
+        },
+        [_vm._v("HR Management System")]
+      ),
+      _vm._v(" "),
+      _c("div", [
+        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "text-muted font-weight-bold text-hover-primary",
+            attrs: { href: "#" }
+          },
+          [_vm._v("hr@demo.com")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
+        [_vm._v("$57,000")]
+      ),
+      _vm._v(" "),
+      _c("span", { staticClass: "text-muted font-weight-bold" }, [
+        _vm._v("Paid")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c("span", { staticClass: "text-muted font-weight-bold" }, [
+        _vm._v("AngularJS, C#")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "label label-lg label-light-danger label-inline" },
+        [_vm._v("Others")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0 py-4" }, [
+      _c("div", { staticClass: "symbol symbol-50 symbol-light mr-1" }, [
+        _c("span", { staticClass: "symbol-label" }, [
+          _c("img", {
+            staticClass: "h-50 align-self-center",
+            attrs: { src: "/assets/media/svg/misc/006-plurk.svg", alt: "" }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0" }, [
+      _c(
+        "a",
+        {
+          staticClass:
+            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
+          attrs: { href: "#" }
+        },
+        [_vm._v("Sant Outstanding")]
+      ),
+      _vm._v(" "),
+      _c("div", [
+        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "text-muted font-weight-bold text-hover-primary",
+            attrs: { href: "#" }
+          },
+          [_vm._v("bprow@bnc.cc")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
+        [_vm._v("$2,000,000")]
+      ),
+      _vm._v(" "),
+      _c("span", { staticClass: "text-muted font-weight-bold" }, [
+        _vm._v("Paid")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c("span", { staticClass: "text-muted font-weight-500" }, [
+        _vm._v("ReactJs, HTML")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "label label-lg label-light-primary label-inline" },
+        [_vm._v("Others")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0 py-4" }, [
+      _c("div", { staticClass: "symbol symbol-50 symbol-light" }, [
+        _c("span", { staticClass: "symbol-label" }, [
+          _c("img", {
+            staticClass: "h-50 align-self-center",
+            attrs: {
+              src: "/assets/media/svg/misc/014-kickstarter.svg",
+              alt: ""
+            }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0" }, [
+      _c(
+        "a",
+        {
+          staticClass:
+            "text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg",
+          attrs: { href: "#" }
+        },
+        [_vm._v("KTR Mobile Application")]
+      ),
+      _vm._v(" "),
+      _c("div", [
+        _c("span", { staticClass: "font-weight-bolder" }, [_vm._v("Email:")]),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "text-muted font-weight-bold text-hover-primary",
+            attrs: { href: "#" }
+          },
+          [_vm._v("ktr@demo.com")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "text-dark-75 font-weight-bolder d-block font-size-lg" },
+        [_vm._v("$45,200,000")]
+      ),
+      _vm._v(" "),
+      _c("span", { staticClass: "text-muted font-weight-bold" }, [
+        _vm._v("Paid")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c("span", { staticClass: "text-muted font-weight-500" }, [
+        _vm._v("ReactJS, Ruby")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-right" }, [
+      _c(
+        "span",
+        { staticClass: "label label-lg label-light-warning label-inline" },
+        [_vm._v("In Progress")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", { staticClass: "text-left text-uppercase" }, [
+        _c("th", { staticClass: "w-40px" }),
+        _vm._v(" "),
+        _c("th", { staticClass: "min-w-200px" }, [_vm._v("Item")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "min-w-100px" }, [_vm._v("Amount")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "min-w-125px" }, [_vm._v("Description")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "min-w-110px" }, [_vm._v("Category")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "min-w-150px" }, [_vm._v("Action")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "pl-0 py-4" }, [
+      _c("div", { staticClass: "symbol symbol-50 symbol-light mr-1" }, [
+        _c("span", { staticClass: "symbol-label" }, [
+          _c("img", {
+            staticClass: "h-50 align-self-center",
+            attrs: { src: "/assets/media/svg/misc/006-plurk.svg", alt: "" }
+          })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-left" }, [
+      _c(
+        "span",
+        { staticClass: "label label-lg label-light-primary label-inline" },
+        [_vm._v("Others")]
+      )
     ])
   }
 ]
@@ -70724,62 +66307,6 @@ var render = function() {
   return _c("div")
 }
 var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WelcomeComponent.vue?vue&type=template&id=1974e6b4&scoped=true&":
-/*!*******************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/WelcomeComponent.vue?vue&type=template&id=1974e6b4&scoped=true& ***!
-  \*******************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "flex-center position-ref full-height" },
-      [
-        _c(
-          "div",
-          [_c("router-link", { attrs: { to: "/auth" } }, [_vm._v("Login")])],
-          1
-        ),
-        _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
-        _c("router-view")
-      ],
-      1
-    )
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "content" }, [
-      _c("div", { staticClass: "title m-b-md" }, [
-        _vm._v("\n                Monilog\n            ")
-      ]),
-      _vm._v(" "),
-      _c("h3", [
-        _vm._v("Log your expenses and income. Track your financial performance")
-      ])
-    ])
-  }
-]
 render._withStripped = true
 
 
@@ -86040,19 +81567,22 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 Vue.use(vue_head__WEBPACK_IMPORTED_MODULE_1___default.a);
 Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]);
-var routes = [{
-  name: "welcome",
-  path: "/",
-  component: Vue.component('welcome-component', __webpack_require__(/*! ./components/WelcomeComponent.vue */ "./resources/js/components/WelcomeComponent.vue")["default"])
-}, {
+var routes = [// {
+//     name: "welcome",
+//     path: "/",
+//     component: Vue.component('welcome-component', require('./components/WelcomeComponent.vue').default)
+// },
+{
   name: "auth",
-  path: "/auth",
+  path: "/",
   component: Vue.component('auth-component', __webpack_require__(/*! ./components/AuthComponent.vue */ "./resources/js/components/AuthComponent.vue")["default"])
 }, {
   name: "dashboard",
   path: "/dashboard",
+  props: true,
   component: Vue.component('dashboard-component', __webpack_require__(/*! ./components/DashboardComponent.vue */ "./resources/js/components/DashboardComponent.vue")["default"])
-}];
+}]; // assign routes
+
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   routes: routes // mode: "history"
 
@@ -86096,17 +81626,48 @@ var app = new Vue({
   data: function data() {
     return {
       user: null,
-      authToken: null
+      authToken: null,
+      isAuthenticated: false
     };
   },
   created: function created() {
-    if (localStorage.getItem('user')) {
-      var user = JSON.parse(localStorage.getItem('user'));
+    var _this = this;
 
-      if (user.user && user.token) {
-        this.user = user;
-        this.authToken = "Bearer " + user.token;
+    // add route guards
+    router.beforeEach(function (to, from, next) {
+      if (to.name !== 'auth' && _this.isAuthenticated) next({
+        name: 'auth'
+      });else next();
+    }); // check if token has expired, then clear session and redirect
+
+    setInterval(function () {
+      console.log('checking auth');
+
+      if (localStorage.getItem('authExpireTime')) {
+        var expires = parseInt(localStorage.getItem('authExpireTime'));
+
+        if (Date.now() > expires) {
+          console.log('removed auth');
+          localStorage.removeItem('auth');
+          console.log('removed auth expire time');
+          localStorage.removeItem('authExpireTime');
+          window.location = '/#/auth';
+        }
       }
+    }, 5000);
+
+    if (localStorage.getItem('auth')) {
+      var auth = JSON.parse(localStorage.getItem('auth'));
+
+      if (auth.user && auth.token) {
+        this.user = auth.user;
+        this.authToken = "Bearer " + auth.token;
+      }
+    }
+  },
+  methods: {
+    checkAuth: function checkAuth() {
+      if (this.user && this.authToken) this.isAuthenticated = true;
     }
   }
 });
@@ -86291,6 +81852,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DashboardComponent_vue_vue_type_template_id_01ab55f4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DashboardComponent_vue_vue_type_template_id_01ab55f4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/LogExpenseComponent.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/LogExpenseComponent.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LogExpenseComponent_vue_vue_type_template_id_a3780f64_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LogExpenseComponent.vue?vue&type=template&id=a3780f64&scoped=true& */ "./resources/js/components/LogExpenseComponent.vue?vue&type=template&id=a3780f64&scoped=true&");
+/* harmony import */ var _LogExpenseComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LogExpenseComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/LogExpenseComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _LogExpenseComponent_vue_vue_type_style_index_0_id_a3780f64_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css& */ "./resources/js/components/LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _LogExpenseComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LogExpenseComponent_vue_vue_type_template_id_a3780f64_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _LogExpenseComponent_vue_vue_type_template_id_a3780f64_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "a3780f64",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/LogExpenseComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/LogExpenseComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/LogExpenseComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./LogExpenseComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LogExpenseComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css&":
+/*!******************************************************************************************************************!*\
+  !*** ./resources/js/components/LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css& ***!
+  \******************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_style_index_0_id_a3780f64_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LogExpenseComponent.vue?vue&type=style&index=0&id=a3780f64&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_style_index_0_id_a3780f64_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_style_index_0_id_a3780f64_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_style_index_0_id_a3780f64_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_style_index_0_id_a3780f64_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_style_index_0_id_a3780f64_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/LogExpenseComponent.vue?vue&type=template&id=a3780f64&scoped=true&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/LogExpenseComponent.vue?vue&type=template&id=a3780f64&scoped=true& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_template_id_a3780f64_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./LogExpenseComponent.vue?vue&type=template&id=a3780f64&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LogExpenseComponent.vue?vue&type=template&id=a3780f64&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_template_id_a3780f64_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LogExpenseComponent_vue_vue_type_template_id_a3780f64_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -86741,75 +82389,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_StatComponent_vue_vue_type_template_id_5d09842e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_StatComponent_vue_vue_type_template_id_5d09842e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/components/WelcomeComponent.vue":
-/*!******************************************************!*\
-  !*** ./resources/js/components/WelcomeComponent.vue ***!
-  \******************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _WelcomeComponent_vue_vue_type_template_id_1974e6b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./WelcomeComponent.vue?vue&type=template&id=1974e6b4&scoped=true& */ "./resources/js/components/WelcomeComponent.vue?vue&type=template&id=1974e6b4&scoped=true&");
-/* harmony import */ var _WelcomeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./WelcomeComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/WelcomeComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _WelcomeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _WelcomeComponent_vue_vue_type_template_id_1974e6b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _WelcomeComponent_vue_vue_type_template_id_1974e6b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  "1974e6b4",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/WelcomeComponent.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/WelcomeComponent.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/components/WelcomeComponent.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WelcomeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./WelcomeComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WelcomeComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WelcomeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/WelcomeComponent.vue?vue&type=template&id=1974e6b4&scoped=true&":
-/*!*************************************************************************************************!*\
-  !*** ./resources/js/components/WelcomeComponent.vue?vue&type=template&id=1974e6b4&scoped=true& ***!
-  \*************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WelcomeComponent_vue_vue_type_template_id_1974e6b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./WelcomeComponent.vue?vue&type=template&id=1974e6b4&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/WelcomeComponent.vue?vue&type=template&id=1974e6b4&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WelcomeComponent_vue_vue_type_template_id_1974e6b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WelcomeComponent_vue_vue_type_template_id_1974e6b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

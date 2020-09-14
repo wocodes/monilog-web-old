@@ -15,27 +15,32 @@ Vue.use(VueHead);
 Vue.use(VueRouter);
 
 const routes = [
-    {
-        name: "welcome",
-        path: "/",
-        component: Vue.component('welcome-component', require('./components/WelcomeComponent.vue').default)
-    },
+    // {
+    //     name: "welcome",
+    //     path: "/",
+    //     component: Vue.component('welcome-component', require('./components/WelcomeComponent.vue').default)
+    // },
     {
         name: "auth",
-        path: "/auth",
+        path: "/",
         component: Vue.component('auth-component', require('./components/AuthComponent.vue').default)
     },
     {
         name: "dashboard",
         path: "/dashboard",
+        props: true,
         component: Vue.component('dashboard-component', require('./components/DashboardComponent.vue').default)
     }
 ]
 
+
+// assign routes
 const router = new VueRouter({
     routes: routes,
     // mode: "history"
 })
+
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -83,17 +88,48 @@ const app = new Vue({
     data() {
       return {
           user: null,
-          authToken: null
+          authToken: null,
+          isAuthenticated: false,
       }
     },
 
     created() {
-        if(localStorage.getItem('user')) {
-            let user = JSON.parse(localStorage.getItem('user'));
-            if(user.user && user.token) {
-                this.user = user;
-                this.authToken = "Bearer "+user.token;
+
+        // add route guards
+        router.beforeEach((to, from, next) => {
+            if(to.name !== 'auth' && this.isAuthenticated) next({name: 'auth'})
+            else next()
+        })
+
+
+        // check if token has expired, then clear session and redirect
+        setInterval(function() {
+            console.log('checking auth');
+            if(localStorage.getItem('authExpireTime')) {
+                let expires = parseInt(localStorage.getItem('authExpireTime'));
+                if(Date.now() > expires) {
+                    console.log('removed auth')
+                    localStorage.removeItem('auth');
+
+                    console.log('removed auth expire time')
+                    localStorage.removeItem('authExpireTime');
+                    window.location = ('/#/auth');
+                }
             }
+        }, 5000)
+
+        if(localStorage.getItem('auth')) {
+            let auth = JSON.parse(localStorage.getItem('auth'));
+            if(auth.user && auth.token) {
+                this.user = auth.user;
+                this.authToken = "Bearer "+auth.token;
+            }
+        }
+    },
+
+    methods: {
+        checkAuth() {
+            if(this.user && this.authToken) this.isAuthenticated = true;
         }
     }
 });
