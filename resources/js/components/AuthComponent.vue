@@ -1,6 +1,6 @@
 <template>
         <!--begin::Main-->
-    <div class="d-flex flex-column flex-root" style="height:830px">
+    <div class="d-flex flex-column flex-root" style="height:800px">
         <!--begin::Login-->
         <div class="login login-1 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white" id="kt_login">
             <!--begin::Aside-->
