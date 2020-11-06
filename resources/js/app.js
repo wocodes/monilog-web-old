@@ -23,13 +23,19 @@ const routes = [
     {
         name: "auth",
         path: "/",
-        component: Vue.component('auth-component', require('./components/AuthComponent.vue').default)
+        component: Vue.component('auth-component', require('./components/auth/AuthComponent.vue').default)
     },
     {
         name: "dashboard",
         path: "/dashboard",
         props: true,
         component: Vue.component('dashboard-component', require('./components/DashboardComponent.vue').default)
+    },
+    {
+        name: "budget-logger",
+        path: "/logger/budget",
+        props: true,
+        component: Vue.component('budget-logger', require('./components/logger/BudgetLoggerComponent.vue').default)
     }
 ]
 
@@ -53,12 +59,18 @@ const router = new VueRouter({
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+// auth
+Vue.component('register-component', require('./components/auth/RegisterComponent.vue').default);
+Vue.component('login-component', require('./components/auth/LoginComponent.vue').default);
 
-Vue.component('register-component', require('./components/RegisterComponent.vue').default);
-Vue.component('login-component', require('./components/LoginComponent.vue').default);
-Vue.component('logger-component', require('./components/LoggerComponent.vue').default);
-Vue.component('logs-component', require('./components/LogsComponent.vue').default);
-Vue.component('stat-component', require('./components/StatComponent.vue').default);
+// logs
+Vue.component('expense-log-component', require('./components/logs/ExpenseLogComponent.vue').default);
+Vue.component('budget-log-component', require('./components/logs/BudgetLogComponent.vue').default);
+
+// loggers
+Vue.component('budget-logger', require('./components/logger/BudgetLoggerComponent').default);
+
+//navbar
 Vue.component('navbar-component', require('./components/NavbarComponent.vue').default);
 
 /**
@@ -104,16 +116,25 @@ const app = new Vue({
 
         // check if token has expired, then clear session and redirect
         setInterval(function() {
-            console.log('checking auth');
+            // console.log('checking auth');
+            // console.log(localStorage.getItem('auth'));
             if(localStorage.getItem('authExpireTime')) {
                 let expires = parseInt(localStorage.getItem('authExpireTime'));
+                // let expires = 1604641115815;
+
+                // var now = Date.now();
+                // console.log('now in ms', now);
+                // console.log('now date', Date(now));
+                // console.log('expires in ms', expires);
+                // console.log('expires date', new Date(expires));
+                // console.log(Date.now() > expires);
                 if(Date.now() > expires) {
                     console.log('removed auth')
                     localStorage.removeItem('auth');
 
                     console.log('removed auth expire time')
                     localStorage.removeItem('authExpireTime');
-                    window.location = ('/#/auth');
+                    window.location = ('/');
                 }
             }
         }, 5000)

@@ -14,11 +14,20 @@
                     <div class="modal-body">
                         <form class="form">
                             <div class="card-body">
+
                                 <div class="form-group">
+                                    <select class="form-control form-control-lg form-control-solid"
+                                           v-model="selectedBudget">
+                                        <option value="" readonly>Select a budget to log</option>
+                                        <option v-for="budget in unloggedBudgets" v-bind:value="budget.id">{{ budget.title }} - {{ budget.amount }}</option>
+                                    </select>
+
+                                </div>
+                                <div class="form-group" v-show="!selectedBudget">
 <!--                                    <label>Item Name:</label>-->
                                     <input type="text" class="form-control form-control-lg form-control-solid"
                                            placeholder="Spent some cash today? Log it here"
-                                           v-model="log_title" required />
+                                           v-model="logTitle" />
 
 <!--                                    <span class="form-text text-muted">Please enter item name</span>-->
                                 </div>
@@ -28,13 +37,13 @@
                                         <input type="number"
                                                min="100" class="form-control form-control-solid"
                                                placeholder="Amount Spent"
-                                               v-model="log_amount" />
+                                               v-model="logAmount" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="checkbox-list">
                                         <label class="checkbox">
-                                            <input type="checkbox" @click="show_log_details = !show_log_details"/>
+                                            <input type="checkbox" @click="showLogDetails = !showLogDetails"/>
                                             <span></span>
                                             Add More Info
                                         </label>
@@ -42,17 +51,17 @@
                                 </div>
 
 
-                                <div v-show="show_log_details">
+                                <div v-show="showLogDetails">
                                     <div class="form-group">
                                         <textarea class="form-control form-control-solid"
                                                   placeholder="Have more detail for your expense?"
-                                                  v-model="log_description" required />
+                                                  v-model="logDescription" required />
                                     </div>
 
                                     <div class="form-group">
                                         <input type="date" class="form-control form-control-solid"
                                                placeholder="Date spent"
-                                               v-model="log_date" required />
+                                               v-model="logDate" required />
                                     </div>
                                 </div>
                             </div>
@@ -70,27 +79,42 @@
 
 <script>
     export default {
+        props: ["unloggedBudgets"],
+
         name: "LogExpenseComponent",
         data() {
             return {
-                show_log_details: false,
-                log_title: '',
-                log_amount: '',
-                log_description: '',
-                log_date: '',
+                showLogDetails: false,
+                selectedBudget: null,
+                logTitle: '',
+                logAmount: '',
+                logDescription: '',
+                logDate: '',
                 status: null,
                 currentDate: null
             }
         },
+
+        mounted() {
+          console.log('asd', this.unloggedBudgets);
+        },
+
+        watch: {
+            selectedBudget: function(val) {
+                console.log(val);
+            }
+        },
+
         methods: {
             submitLog() {
                 Swal.showLoading({title: "Processing..."});
 
                 let data = {
-                    "title": this.log_title,
-                    "amount": this.log_amount,
-                    "description": this.log_description,
-                    "date_logged": this.log_date,
+                    "budget_id": this.selectedBudget,
+                    "title": this.logTitle,
+                    "amount": this.logAmount,
+                    "description": this.logDescription,
+                    "date_logged": this.logDate,
                 }
 
 
@@ -104,47 +128,32 @@
                         }
                     }
                 )
-                    .then(response => response.json())
-                    .then(result => {
+                .then(response => response.json())
+                .then(result => {
+                    if(result.status === 'success') {
+                        // dispatch event to another component (LogsComponent)
 
-                        if(result.status === 'success') {
-                            // dispatch event to another component (LogsComponent)
+                        Swal.fire({
+                            title: "Good job!",
+                            text: "Expense Log Saved!",
+                            icon: "success",
+                            showConfirmButton: false,
+                            showCancelButton: false,
+                            timer: 2000,
+                        }).then(function(result) {
+                            if(result.dismiss === 'timer') {
+                                // redirect to current page
+                                window.location.reload()
+                            }
+                        })
 
-                            Swal.fire({
-                                title: "Good job!",
-                                text: "Expense Log Saved!",
-                                icon: "success",
-                                showConfirmButton: false,
-                                showCancelButton: false,
-                                timer: 2000,
-                            }).then(function(result) {
-                                if(result.dismiss === 'timer') {
-                                    // redirect to current page
-                                    console.log(234);
-                                    // this.$router.go(0);
-                                    window.location.reload()
-                                }
-                            })
-                            // });
-                            //
-                            // Swal.fire({
-                            //     text: result.message,
-                            //     icon: result.status,
-                            //     toast: true,
-                            //     position: 'top-end',
-                            //     timer: 4000,
-                            //     timerProgressBar: true,
-                            //     showConfirmButton: false,
-                            //     background: '#cfefb7'
-                            // })
-
-                            this.log_title = '';
-                            this.log_amount = '';
-                            this.log_description = '';
-                            this.log_date = '';
-                        }
-                    })
-                    .catch(err => console.log(err));
+                        this.logTitle = '';
+                        this.logAmount = '';
+                        this.logDescription = '';
+                        this.logDate = '';
+                    }
+                })
+                .catch(err => console.log(err));
             }
         }
     }

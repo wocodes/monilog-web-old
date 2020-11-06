@@ -75,5 +75,10 @@
         <!--begin::Page Scripts(used by Dashboard page)-->
         <script src="/assets/js/pages/widgets.js"></script>
         <!--end::Page Scripts-->
+
+
+        <!--begin::Page Scripts(used by on select2)-->
+        <script src="/assets/js/pages/crud/forms/widgets/select2.js"></script>
+        <!--end::Page Scripts-->
     </body>
 </html>
