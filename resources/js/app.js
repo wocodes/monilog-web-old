@@ -72,6 +72,8 @@ Vue.component('budget-logger', require('./components/logger/BudgetLoggerComponen
 
 //navbar
 Vue.component('navbar-component', require('./components/NavbarComponent.vue').default);
+Vue.component('navbar', require('./components/NavBar.vue').default);
+Vue.component('layout', require('./components/LayoutComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
