@@ -10,9 +10,12 @@ window.Vue = require('vue');
 
 import VueRouter from "vue-router";
 import VueHead from "vue-head";
+import moment from 'moment';
+
 
 Vue.use(VueHead);
 Vue.use(VueRouter);
+
 
 const routes = [
     // {
@@ -32,10 +35,16 @@ const routes = [
         component: Vue.component('dashboard-component', require('./components/DashboardComponent.vue').default)
     },
     {
-        name: "budget-logger",
-        path: "/logger/budget",
+        name: "budget-log",
+        path: "/budget",
         props: true,
-        component: Vue.component('budget-logger', require('./components/logger/BudgetLoggerComponent.vue').default)
+        component: Vue.component('budget-log', require('./components/logs/BudgetLogComponent.vue').default)
+    },
+    {
+        name: "expense-log",
+        path: "/expense",
+        props: true,
+        component: Vue.component('expense-log', require('./components/logs/ExpenseLogComponent.vue').default)
     }
 ]
 
@@ -60,8 +69,7 @@ const router = new VueRouter({
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 // auth
-Vue.component('register-component', require('./components/auth/RegisterComponent.vue').default);
-Vue.component('login-component', require('./components/auth/LoginComponent.vue').default);
+Vue.component('auth-component', require('./components/auth/AuthComponent.vue').default);
 
 // logs
 Vue.component('expense-log-component', require('./components/logs/ExpenseLogComponent.vue').default);
@@ -74,6 +82,8 @@ Vue.component('budget-logger', require('./components/logger/BudgetLoggerComponen
 Vue.component('navbar-component', require('./components/NavbarComponent.vue').default);
 Vue.component('navbar', require('./components/NavBar.vue').default);
 Vue.component('layout', require('./components/LayoutComponent.vue').default);
+Vue.component('main-content', require('./components/MainContentComponent.vue').default);
+Vue.component('footer-component', require('./components/FooterComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -81,17 +91,22 @@ Vue.component('layout', require('./components/LayoutComponent.vue').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-import moment from 'moment';
+
+Vue.filter('formatLongMonth', function(value) {
+    if (value) {
+        return moment(String(value)).format('MMM. YYYY')
+    }
+});
 
 Vue.filter('formatShortWordDate', function(value) {
     if (value) {
-        return moment(String(value)).format('MMM Do, YYYY')
+        return moment(String(value)).format('Do MMM., YYYY')
     }
 });
 
 Vue.filter('formatShortWordDateTime', function(value) {
     if (value) {
-        return moment(String(value)).format('MMM Do YYYY hh:mm')
+        return moment(String(value)).format('Do MMM., YYYY hh:mm')
     }
 });
 
