@@ -4,7 +4,7 @@
 
         <MainContentComponent>
             <h3 class="p-4 text-center">Budget Log ({{ new Date() | formatLongMonth }})</h3>
-            <div id="expense-stats" class="row p-2 bg-success" style="border-radius: 5px">
+            <div id="budget-stats" class="row p-2 bg-success" style="border-radius: 5px">
                 <div class="col-lg-3 col-md-3 col-sm-12 mb-4">
                     <button class="btn btn-dark btn-md text-light btn-block p-3 shadow" role="button"
                             data-toggle="modal" data-target="#logBudgetModal">
