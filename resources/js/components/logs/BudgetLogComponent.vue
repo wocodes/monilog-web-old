@@ -32,7 +32,7 @@
                         <div class="col-12">
                             <h6 class="font-weight-bold">
                                 This Year
-                                <small>({{ currentMonthsLogs.length }})</small>
+                                <small>({{ yearly_count }})</small>
                             </h6>
                         </div>
                         <div class="col-12">
@@ -47,7 +47,7 @@
                         <div class="col-12">
                             <h6 class="font-weight-bold">
                                 Overall
-                                <small>({{ currentMonthsLogs.length }})</small>
+                                <small>({{ overall_count }})</small>
                             </h6>
                         </div>
                         <div class="col-12">
