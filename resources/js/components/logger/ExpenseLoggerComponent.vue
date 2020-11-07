@@ -1,9 +1,8 @@
 <template>
-
     <div>
         <!-- Modal-->
         <div class="modal fade" id="logExpenseModal" tabindex="-1" role="dialog" aria-labelledby="logExpenseModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Log an Expense</h5>
@@ -19,7 +18,7 @@
                                     <select class="form-control form-control-lg form-control-solid"
                                            v-model="selectedBudget">
                                         <option value="" readonly>Select a budget to log</option>
-                                        <option v-for="budget in unloggedBudgets" v-bind:value="budget.id">{{ budget.title }} - {{ budget.amount }}</option>
+                                        <option v-for="budget in unloggedBudgets" v-bind:value="budget.id">{{ budget.title }} - &#8358;{{ budget.amount.toLocaleString() }}</option>
                                     </select>
 
                                 </div>
@@ -79,8 +78,6 @@
 
 <script>
     export default {
-        props: ["unloggedBudgets"],
-
         name: "LogExpenseComponent",
         data() {
             return {
@@ -91,18 +88,22 @@
                 logDescription: '',
                 logDate: '',
                 status: null,
-                currentDate: null
+                currentDate: null,
+                unloggedBudgets: []
             }
         },
 
         mounted() {
-          console.log('asd', this.unloggedBudgets);
-        },
-
-        watch: {
-            selectedBudget: function(val) {
-                console.log(val);
-            }
+            fetch(process.env.MIX_API_URL+"/budgets/unlogged", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": this.$root.authToken
+                }
+            })
+            .then(res => res.json())
+            .then(res => {
+                this.unloggedBudgets = res
+            });
         },
 
         methods: {
@@ -139,7 +140,7 @@
                             icon: "success",
                             showConfirmButton: false,
                             showCancelButton: false,
-                            timer: 2000,
+                            timer: 1000,
                         }).then(function(result) {
                             if(result.dismiss === 'timer') {
                                 // redirect to current page
