@@ -16,7 +16,6 @@ and annual basis. The path to wealth entials proper finance management.
 Below is a list of our development team on Monilog
 <ul>
 <li>William Odiomonafe - Developer</li>
-<li>Aleem Isiaka - Developer</li>
 </ul>
 
 ## Todos
@@ -38,7 +37,7 @@ You are free to send feature requests to william.odiomonafe@gmail.com
 #### Budget Log
 <ul>
 <li>
-[ ] Save Log  
+[x] Save Log  
 </li>
 <li>
 [ ] Edit/Delete Log   
@@ -54,7 +53,7 @@ You are free to send feature requests to william.odiomonafe@gmail.com
 [x] Show daily & current month's log
 </li>
 <li>
-[ ] Log daily expenses - pick from budget list
+[x] Log daily expenses - pick from budget list
 </li>
 <li>
 [ ] Edit/Delete log
