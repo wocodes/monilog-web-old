@@ -21,4 +21,4 @@ if (mix.inProduction()) {
 
 
 // Add BrowserSync to enable aut browser refresh on file change
-mix.browserSync(process.env.MIX_APP_URL)
+// mix.browserSync(process.env.MIX_APP_URL)
