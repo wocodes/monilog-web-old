@@ -109,6 +109,8 @@
         },
 
         mounted: function() {
+            // console.log('root', this.$root);
+            // console.log('parent', this.$parent);
             this.user = this.$root.user
             fetch(process.env.MIX_API_URL + '/stats', {
                 headers: {

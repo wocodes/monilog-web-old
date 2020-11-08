@@ -62,7 +62,7 @@
                         <h5 class="font-weight-bold">Register</h5>
                     </div>
                     <div class="card-body">
-                        <form class="p-6" @submit.prevent="doRegister">
+                        <form class="p-6">
                             <div class="form-group">
                                 <label for="register-fullname"><small class="font-weight-bold">Fullname</small></label>
                                 <input v-model="register.name"
@@ -99,7 +99,7 @@
                                        placeholder="Password">
                             </div>
 
-                            <button class="btn btn-lg btn-primary btn-block mt-5">
+                            <button class="btn btn-lg btn-primary btn-block mt-5" @click="doRegister()">
                                 <span class="fa fa-user-plus mr-2"></span>
                                 Register
                             </button>
@@ -233,7 +233,7 @@
                                     }
 
                                     Swal.fire({
-                                        text: "You've successfully registered. Please verify your account before logging in.",
+                                        text: "You've successfully registered. Logging you in.",
                                         icon: "success",
                                         toast: true,
                                         position: "top-end",
