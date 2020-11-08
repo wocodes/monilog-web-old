@@ -15,35 +15,25 @@
                     <div class="modal-body">
                         <!--begin::Form-->
                         <form @submit.prevent="saveBudget()">
-                            <div class="form-group row">
-                                <label  class="col-3 col-form-label">Title</label>
-                                <div class="col-9">
-                                    <input class="form-control" v-model="budget.title" type="text" required id="example-text-input"/>
-                                </div>
+                            <div class="form-group">
+                                <label for="budget-title"><small class="font-weight-bold">Title</small></label>
+                                <input class="form-control" v-model="budget.title" type="text" required id="budget-title"/>
                             </div>
-                            <div class="form-group row">
-                                <label  class="col-3 col-form-label">Description</label>
-                                <div class="col-9">
-                                    <input class="form-control" v-model="budget.description" type="text"/>
-                                </div>
+                            <div class="form-group">
+                                <label for="budget-description"><small class="font-weight-bold">Description</small></label>
+                                <input id="budget-description" class="form-control" v-model="budget.description" type="text"/>
                             </div>
-                            <div class="form-group row">
-                                <label  class="col-3 col-form-label">Amount</label>
-                                <div class="col-9">
-                                    <input class="form-control" type="number" v-model="budget.amount" required/>
-                                </div>
+                            <div class="form-group">
+                                <label for="budget-amount"><small class="font-weight-bold">Amount</small></label>
+                                <input id="budget-amount" class="form-control" type="number" v-model="budget.amount" required/>
                             </div>
-                            <div class="form-group row">
-                                <label for="example-datetime-local-input" class="col-3 col-form-label">Date/Time</label>
-                                <div class="col-9">
-                                    <input class="form-control" type="datetime-local" v-model="budget.for" id="example-datetime-local-input" required/>
-                                </div>
+                            <div class="form-group">
+                                <label for="budget-datetime-local-input"><small class="font-weight-bold">Date/Time</small></label>
+                                <input class="form-control" type="datetime-local" v-model="budget.for" id="budget-datetime-local-input" required/>
                             </div>
-                            <div class="form-group row">
-                                <label for="example-color-input" class="col-3 col-form-label">Label</label>
-                                <div class="col-9">
-                                    <input class="form-control" type="color" v-model="budget.label" value="#563d7c" id="example-color-input"/>
-                                </div>
+                            <div class="form-group">
+                                <label for="budget-color-input"><small class="font-weight-bold">Label</small></label>
+                                <input class="form-control" type="color" v-model="budget.label" value="#563d7c" id="budget-color-input"/>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary font-weight-bold">Submit</button>
