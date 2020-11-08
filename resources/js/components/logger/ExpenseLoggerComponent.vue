@@ -11,11 +11,11 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form class="form" @submit.prevent="submitLog">
+                        <form>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="expense-budget"><small class="font-weight-bold">Select Budget</small></label>
-                                    <select id="expense-budget" class="form-control form-control-lg form-control-solid"
+                                    <label><small class="font-weight-bold">Select Budget</small></label>
+                                    <select class="form-control form-control-lg form-control-solid"
                                            v-model="selectedBudget">
                                         <option value="" selected>- Select Budget -</option>
                                         <option v-for="budget in unloggedBudgets" v-bind:value="budget.id">{{ budget.title }} - &#8358;{{ budget.amount.toLocaleString() }}</option>
@@ -23,18 +23,17 @@
                                 </div>
 
                                 <div class="form-group" v-show="!selectedBudget">
-                                    <label for="expense-title"><small class="font-weight-bold">Title</small></label>
-                                    <input id="expense-title" type="text" class="form-control form-control-lg form-control-solid"
+                                    <label><small class="font-weight-bold">Title</small></label>
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
                                            placeholder="What did you spend on?"
                                            v-model="logTitle" />
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="expense-amount"><small class="font-weight-bold">Title</small></label>
+                                    <label><small class="font-weight-bold">Amount</small></label>
                                     <div class="input-group input-group-lg">
                                         <div class="input-group-prepend"><span class="input-group-text" >&#8358;</span></div>
-                                        <input id="expense-amount"
-                                               type="number"
+                                        <input type="number"
                                                min="100" class="form-control form-control-solid"
                                                placeholder="Amount Spent"
                                                v-model="logAmount" />
@@ -53,17 +52,15 @@
 
                                 <div v-show="showLogDetails">
                                     <div class="form-group">
-                                        <label for="expense-description"><small class="font-weight-bold">Description</small></label>
-                                        <textarea id="expense-description"
-                                                  class="form-control form-control-solid"
+                                        <label><small class="font-weight-bold">Description</small></label>
+                                        <textarea class="form-control form-control-solid"
                                                   placeholder="Have more detail for your expense?"
                                                   v-model="logDescription" required />
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="expense-date"><small class="font-weight-bold">Date</small></label>
-                                        <input id="expense-date"
-                                               type="date" class="form-control form-control-solid"
+                                        <label><small class="font-weight-bold">Date</small></label>
+                                        <input type="date" class="form-control form-control-solid"
                                                placeholder="Date spent"
                                                v-model="logDate" required />
                                     </div>
@@ -72,7 +69,10 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary font-weight-bold">Save</button>
+                        <button type="button" class="btn btn-primary font-weight-bold" @click="submitLog">
+                            <span class="fa fa-save mr-2"></span>
+                            Save
+                        </button>
                         <button type="button" class="btn btn-default font-weight-bold" data-dismiss="modal">Close</button>
                     </div>
                 </div>

@@ -22,7 +22,7 @@
                 <li class="nav-item mr-4">
                     <a class="nav-link" href="#">
                         <img :src="`${publicPath}images/300_21.jpg`" class="rounded-circle" width="25px">
-                        William
+                        {{ user.name }}
                     </a>
                 </li>
                 <li class="nav-item">
@@ -40,8 +40,13 @@
         name: "NavBar",
         data() {
             return {
-                publicPath: process.env.MIX_APP_URL
+                publicPath: process.env.MIX_APP_URL,
+                user: {}
             }
+        },
+        created() {
+          this.user = this.$root.user;
+          console.log(this.user)
         },
         methods: {
             logout() {

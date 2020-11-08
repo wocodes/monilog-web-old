@@ -36,7 +36,10 @@
                                 <input class="form-control" type="color" v-model="budget.label" value="#563d7c" id="budget-color-input"/>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary font-weight-bold">Submit</button>
+                                <button type="submit" class="btn btn-primary font-weight-bold">
+                                    <span class="fa fa-save mr-2"></span>
+                                    Submit
+                                </button>
                                 <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
                             </div>
                         </form>

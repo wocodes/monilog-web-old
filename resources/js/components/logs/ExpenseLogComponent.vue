@@ -101,7 +101,7 @@
                             </td>
                             <td>
                                 <a href="#"><span class="fa fa-edit p-2"></span></a>
-                                <a href="#"><span class="fa fa-trash p-2 text-danger"></span></a>
+                                <a href="#" @click="deleteLog(log.id)"><span class="fa fa-trash p-2 text-danger"></span></a>
                             </td>
                         </tr>
                     </tbody>
@@ -174,6 +174,29 @@
                     this.currentMonthsTotalLog += parseFloat(log.amount);
                 })
             });
+        },
+
+        methods: {
+            deleteLog(logId) {
+                let confirm = window.confirm("Are you sure you want to delete this log?");
+
+                if (confirm) {
+                    // delete expense
+                    fetch(process.env.MIX_API_URL + '/expenses/' + logId,
+                        {
+                            method: 'DELETE',
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": this.$root.authToken
+                            }
+                        }
+                    )
+                        .then(response => response.json())
+                        .then(result => {
+                            window.location.reload();
+                        });
+                }
+            }
         }
     }
 </script>
