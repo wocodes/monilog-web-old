@@ -62,6 +62,11 @@
                         <h5 class="font-weight-bold">Register</h5>
                     </div>
                     <div class="card-body">
+                        <h6 class="alert alert-warning" v-if="password_incorrect">
+                            <span class="fa fa-exclamation-triangle"></span>
+                            Passwords aren't the same
+                        </h6>
+
                         <form class="p-6">
                             <div class="form-group">
                                 <label for="register-fullname"><small class="font-weight-bold">Fullname</small></label>
@@ -189,7 +194,8 @@
             doRegister() {
                 if(this.register.password !== this.register.cpassword) {
                     this.password_incorrect = true;
-                    return;
+                    this.showRegister = true;
+                    this.showLogin = False;
                 }
 
                 // grecaptcha.ready(function() {
@@ -228,7 +234,7 @@
                                         localStorage.setItem("auth", JSON.stringify(resp.credentials));
                                         localStorage.setItem("authExpireTime", resp.credentials.expires + Date.now());
                                         setTimeout(() => {
-                                            this.$router.push({name: 'dashboard', params: {user: resp.credentials.user}});
+                                            this.$router.replace({name: 'dashboard', params: {user: resp.credentials.user}});
                                         }, 2000);
                                     }
 
@@ -243,7 +249,7 @@
                                         background: "#cfefb7",
                                     }).then(result => {
                                         if(result.dismiss === 'timer') {
-                                            this.$router.push({name: 'dashboard'})
+                                            this.$router.replace({name: 'dashboard', params: { user: resp.credentials.user }})
                                         }
                                     })
                                 });
