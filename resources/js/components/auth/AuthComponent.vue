@@ -177,17 +177,17 @@
                             Swal.fire({
                                 text: resp.message,
                                 icon: resp.status,
-                                toast: true,
-                                position: "top-end",
+                                // toast: true,
+                                position: "center",
                                 timer: 1500,
                                 timerProgressBar: true,
                                 showConfirmButton: false,
-                                background: "#cfefb7",
+                                // background: "#cfefb7",
                                 width: "300px",
                             });
 
                             setTimeout(() => {
-                                this.$router.push({name: 'dashboard', params: {user: resp.credentials.user}});
+                                this.$router.replace({name: 'dashboard', params: {user: resp.credentials.user}});
                             }, 1500);
                         }
                     });
