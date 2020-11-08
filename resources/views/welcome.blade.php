@@ -43,6 +43,7 @@
 
         <link href="css/style.css" rel="stylesheet" type="text/css" />
 
+{{--        <script src="https://www.google.com/recaptcha/api.js?render=reCAPTCHA_site_key"></script>--}}
     </head>
     <body id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading">
 

@@ -6,13 +6,18 @@
             </div>
         </div>
 
-        <div class="row justify-content-center mt-4" v-show="showLogin">
+        <div class="row justify-content-center mt-2" v-show="showLogin">
             <div class="col col-lg-5">
                 <div class="card">
                     <div class="card-header text-center bg-dark text-light">
                         <h5 class="font-weight-bold">Login</h5>
                     </div>
                     <div class="card-body">
+                        <h6 class="alert alert-warning" v-if="status==='error'">
+                            <span class="fa fa-exclamation-triangle"></span>
+                            {{ status_message }}
+                        </h6>
+
                         <form class="p-6" @submit.prevent="doLogin">
                             <div class="form-group">
                                 <label for="login-email-phone"><small class="font-weight-bold">Email/Phone</small></label>
@@ -129,7 +134,6 @@
                     cpassword: ""
                 },
                 status: null,
-                showOverlay: false,
                 status_message: null,
                 password_incorrect: false
             }
@@ -154,7 +158,7 @@
                     .then((resp) => {
                         if (resp.status === "error") {
                             this.status = "error";
-                            this.showOverlay = false;
+                            this.status_message = resp.message;
                         } else {
                             this.status = "success";
                             this.login.email = "";
@@ -162,86 +166,91 @@
 
                             localStorage.setItem("auth", JSON.stringify(resp.credentials));
                             localStorage.setItem("authExpireTime", resp.credentials.expires + Date.now());
+
+                            Swal.fire({
+                                text: resp.message,
+                                icon: resp.status,
+                                toast: true,
+                                position: "top-end",
+                                timer: 1500,
+                                timerProgressBar: true,
+                                showConfirmButton: false,
+                                background: "#cfefb7",
+                                width: "300px",
+                            });
+
                             setTimeout(() => {
                                 this.$router.push({name: 'dashboard', params: {user: resp.credentials.user}});
-                            }, 1000);
+                            }, 1500);
                         }
-
-                        // Swal.fire({
-                        //     text: resp.message,
-                        //     icon: resp.status,
-                        //     toast: true,
-                        //     position: "top-end",
-                        //     timer: 1000,
-                        //     timerProgressBar: true,
-                        //     showConfirmButton: false,
-                        //     background: "#cfefb7",
-                        //     width: "200px",
-                        // });
                     });
             },
 
             doRegister() {
-
                 if(this.register.password !== this.register.cpassword) {
                     this.password_incorrect = true;
                     return;
                 }
 
-                // send registration and details
-                fetch(process.env.MIX_API_URL+"/user/register", {
-                    method: "POST",
-                    body: JSON.stringify(this.register),
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                    .then(resp => resp.json())
-                    .then(resp => {
-                        // then do login
-                        fetch(process.env.MIX_API_URL+"/user/login", {
+                // grecaptcha.ready(function() {
+                //     grecaptcha.execute('reCAPTCHA_site_key', {action: 'submit'}).then(function(token) {
+                        // send registration and details
+                        fetch(process.env.MIX_API_URL+"/user/register", {
                             method: "POST",
-                            body: JSON.stringify({
-                                email: this.register.email,
-                                password: this.register.password,
-                            }),
+                            body: JSON.stringify(this.register),
                             headers: {
                                 "Content-Type": "application/json",
                             },
                         })
-                            .then((resp) => resp.json())
-                            .then((resp) => {
-                                if (resp.status === "error") {
-                                    this.status = "error";
-                                    this.showOverlay = false;
-                                } else {
-                                    this.status = "success";
-                                    this.login_email = "";
-                                    this.login_password = "";
+                        .then(resp => resp.json())
+                        .then(resp => {
+                            // then do login
+                            fetch(process.env.MIX_API_URL+"/user/login", {
+                                method: "POST",
+                                body: JSON.stringify({
+                                    email: this.register.email,
+                                    password: this.register.password,
+                                }),
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                            })
+                                .then((resp) => resp.json())
+                                .then((resp) => {
+                                    if (resp.status === "error") {
+                                        this.status = "error";
+                                        this.showOverlay = false;
+                                    } else {
+                                        this.status = "success";
+                                        this.login_email = "";
+                                        this.login_password = "";
 
-                                    localStorage.setItem("auth", JSON.stringify(resp.credentials));
-                                    localStorage.setItem("authExpireTime", resp.credentials.expires + Date.now());
-                                    setTimeout(() => {
-                                        this.$router.push({name: 'dashboard', params: {user: resp.credentials.user}});
-                                    }, 2000);
-                                }
+                                        localStorage.setItem("auth", JSON.stringify(resp.credentials));
+                                        localStorage.setItem("authExpireTime", resp.credentials.expires + Date.now());
+                                        setTimeout(() => {
+                                            this.$router.push({name: 'dashboard', params: {user: resp.credentials.user}});
+                                        }, 2000);
+                                    }
 
-                                // Swal.fire({
-                                //     text: "You've successfully registered. Logging you in.",
-                                //     icon: "success",
-                                //     toast: true,
-                                //     position: "top-end",
-                                //     timer: 2000,
-                                //     timerProgressBar: true,
-                                //     showConfirmButton: false,
-                                //     background: "#cfefb7",
-                                // }).then(result => {
-                                //     if(result.dismiss === 'timer') {
-                                //         this.$router.push({name: 'dashboard'})
-                                //     }
-                                // })
+                                    Swal.fire({
+                                        text: "You've successfully registered. Please verify your account before logging in.",
+                                        icon: "success",
+                                        toast: true,
+                                        position: "top-end",
+                                        timer: 2000,
+                                        timerProgressBar: true,
+                                        showConfirmButton: false,
+                                        background: "#cfefb7",
+                                    }).then(result => {
+                                        if(result.dismiss === 'timer') {
+                                            this.$router.push({name: 'dashboard'})
+                                        }
+                                    })
+                                });
                             });
-                    });
+                //
+                //     });
+                // });
             },
 
             switchCard(card) {

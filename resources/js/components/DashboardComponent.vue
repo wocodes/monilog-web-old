@@ -34,6 +34,7 @@
                             </h1>
                             <h6 class="font-weight-bold text-secondary mt-10">This Month's Total Expense</h6>
                             <small class="text-secondary font-italic">click to see more detail...</small>
+<!--                            <span class="fa fa-reply mb-4" style="font-size: 100px;color:#eee;position:absolute;left:-20px;bottom:-10px;z-index:0;overflow:hidden"></span>-->
                         </router-link>
                     </div>
                 </div>
@@ -98,14 +99,16 @@
         data: function() {
           return {
               budgets: [],
-              user: {},
+              user: {
+                  name: 'User'
+              },
               monthly_total_expense: 0,
               monthly_total_budget: 0,
               monthly_difference: 0,
           }
         },
 
-        created: function() {
+        mounted: function() {
             this.user = this.$root.user
             fetch(process.env.MIX_API_URL + '/stats', {
                 headers: {

@@ -73,7 +73,7 @@
             </div>
 
             <div class="row p-4 table-responsive">
-                <table class="table table-hover">
+                <table class="table">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -100,8 +100,8 @@
                                 <span v-else>No</span>
                             </td>
                             <td>
-                                <a href="#"><span class="fa fa-edit p-2"></span></a>
-                                <a href="#" @click="deleteLog(log.id)"><span class="fa fa-trash p-2 text-danger"></span></a>
+                                <a href="#/expense" class="action-btns"><span class="fa fa-edit p-3"></span></a>
+                                <a href="#/expense" class="action-btns" @click="deleteLog(log.id)"><span class="fa fa-trash p-3 text-danger"></span></a>
                             </td>
                         </tr>
                     </tbody>

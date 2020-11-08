@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark" style="background-color: #2d427d !important">
         <a class="navbar-brand h3 font-weight-bold" href="#">
             MONILOG
         </a>
@@ -10,13 +10,13 @@
 
         <div class="collapse navbar-collapse justify-content-end" id="navbarToggler">
             <ul class="navbar-nav mr-sm-6 mt-2 mt-lg-0">
-                <li class="nav-item mr-12 active">
+                <li class="nav-item mr-12" :class="{'active font-weight-bold' : routeName === 'dashboard'}">
                     <router-link to="/dashboard" class="nav-link">Home <span class="sr-only">(current)</span></router-link>
                 </li>
-                <li class="nav-item mr-12">
+                <li class="nav-item mr-12" :class="{'active font-weight-bold' : routeName === 'expense-log'}">
                     <router-link to="/expense" class="nav-link">Expense <span class="sr-only">(current)</span></router-link>
                 </li>
-                <li class="nav-item mr-12">
+                <li class="nav-item mr-12" :class="{'active font-weight-bold' : routeName === 'budget-log'}">
                     <router-link to="/budget" class="nav-link">Budget <span class="sr-only">(current)</span></router-link>
                 </li>
                 <li class="nav-item mr-4">
@@ -41,12 +41,12 @@
         data() {
             return {
                 publicPath: process.env.MIX_APP_URL,
-                user: {}
+                user: {},
+                routeName: this.$route.name
             }
         },
         created() {
           this.user = this.$root.user;
-          console.log(this.user)
         },
         methods: {
             logout() {
