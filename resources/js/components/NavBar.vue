@@ -41,7 +41,9 @@
         data() {
             return {
                 publicPath: process.env.MIX_APP_URL,
-                user: {},
+                user: {
+                    name: 'User'
+                },
                 routeName: this.$route.name
             }
         },

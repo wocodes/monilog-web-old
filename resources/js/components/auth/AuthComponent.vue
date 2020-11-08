@@ -1,5 +1,6 @@
 <template>
-    <div class="container mt-30">
+    <div id="auth-page" class="p-30">
+       <div class="container">
         <div class="row justify-content-center">
             <div class="col col-lg-4 text-center">
                 <h2 class="font-weight-bold">MONILOG</h2>
@@ -118,6 +119,7 @@
             </div>
         </div>
     </div>
+    </div>
 </template>
 
 <script>
@@ -195,7 +197,7 @@
                 if(this.register.password !== this.register.cpassword) {
                     this.password_incorrect = true;
                     this.showRegister = true;
-                    this.showLogin = False;
+                    this.showLogin = false;
                 }
 
                 // grecaptcha.ready(function() {
@@ -241,15 +243,16 @@
                                     Swal.fire({
                                         text: "You've successfully registered. Logging you in.",
                                         icon: "success",
-                                        toast: true,
-                                        position: "top-end",
-                                        timer: 2000,
+                                        // toast: true,
+                                        position: "center",
+                                        timer: 2500,
                                         timerProgressBar: true,
                                         showConfirmButton: false,
-                                        background: "#cfefb7",
+                                        // background: "#cfefb7",
                                     }).then(result => {
                                         if(result.dismiss === 'timer') {
                                             this.$router.replace({name: 'dashboard', params: { user: resp.credentials.user }})
+                                            // window.location.href = '#/dashboard';
                                         }
                                     })
                                 });
@@ -273,5 +276,10 @@
 </script>
 
 <style scoped>
-
+    #auth-page {
+        background-image: url("/images/bg.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100vh;
+    }
 </style>

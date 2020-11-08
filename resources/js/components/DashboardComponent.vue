@@ -99,9 +99,6 @@
         data: function() {
           return {
               budgets: [],
-              user: {
-                  name: 'User'
-              },
               monthly_total_expense: 0,
               monthly_total_budget: 0,
               monthly_difference: 0,
@@ -110,8 +107,8 @@
 
         mounted: function() {
             // console.log('root', this.$root);
+            // console.log('params', this.$route.params);
             // console.log('parent', this.$parent);
-            this.user = this.$root.user
             fetch(process.env.MIX_API_URL + '/stats', {
                 headers: {
                     'Content-Type': 'application/json',
