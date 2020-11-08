@@ -1,5 +1,5 @@
 <template>
-    <div id="auth-page" class="p-30">
+    <div id="auth-page" class="pt-30">
        <div class="container">
         <div class="row justify-content-center">
             <div class="col col-lg-4 text-center">
