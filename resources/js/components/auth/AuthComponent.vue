@@ -184,11 +184,12 @@
                                 showConfirmButton: false,
                                 // background: "#cfefb7",
                                 width: "300px",
-                            });
-
-                            setTimeout(() => {
-                                this.$router.replace({name: 'dashboard', params: {user: resp.credentials.user}});
-                            }, 1500);
+                            }).then(result => {
+                                if(result.dismiss === 'timer') {
+                                    this.$router.replace({name: 'dashboard', params: { user: resp.credentials.user }})
+                                    // window.location.href = '#/dashboard';
+                                }
+                            })
                         }
                     });
             },
