@@ -45,6 +45,12 @@ const routes = [
         path: "/expense",
         props: true,
         component: Vue.component('expense-log', require('./components/logs/ExpenseLogComponent.vue').default)
+    },
+    {
+        name: "setup-category",
+        path: "/setup/category",
+        props: true,
+        component: Vue.component('setup-category-component', require('./components/setup/CategorySelectionComponent.vue').default)
     }
 ]
 
@@ -84,6 +90,9 @@ Vue.component('navbar', require('./components/NavBar.vue').default);
 Vue.component('layout', require('./components/LayoutComponent.vue').default);
 Vue.component('main-content', require('./components/MainContentComponent.vue').default);
 Vue.component('footer-component', require('./components/FooterComponent.vue').default);
+
+// setup
+Vue.component('setup-category-component', require('./components/setup/CategorySelectionComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

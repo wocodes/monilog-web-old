@@ -198,6 +198,7 @@
                     this.password_incorrect = true;
                     this.showRegister = true;
                     this.showLogin = false;
+                    return;
                 }
 
                 // grecaptcha.ready(function() {
@@ -223,22 +224,18 @@
                                     "Content-Type": "application/json",
                                 },
                             })
-                                .then((resp) => resp.json())
-                                .then((resp) => {
-                                    if (resp.status === "error") {
-                                        this.status = "error";
-                                        this.showOverlay = false;
-                                    } else {
-                                        this.status = "success";
-                                        this.login_email = "";
-                                        this.login_password = "";
+                            .then((resp) => resp.json())
+                            .then((resp) => {
+                                if (resp.status === "error") {
+                                    this.status = "error";
+                                    this.showOverlay = false;
+                                } else {
+                                    this.status = "success";
+                                    this.login_email = "";
+                                    this.login_password = "";
 
-                                        localStorage.setItem("auth", JSON.stringify(resp.credentials));
-                                        localStorage.setItem("authExpireTime", resp.credentials.expires + Date.now());
-                                        setTimeout(() => {
-                                            this.$router.replace({name: 'dashboard', params: {user: resp.credentials.user}});
-                                        }, 2000);
-                                    }
+                                    localStorage.setItem("auth", JSON.stringify(resp.credentials));
+                                    localStorage.setItem("authExpireTime", resp.credentials.expires + Date.now());
 
                                     Swal.fire({
                                         text: "You've successfully registered. Logging you in.",
@@ -249,13 +246,14 @@
                                         timerProgressBar: true,
                                         showConfirmButton: false,
                                     }).then(result => {
-                                        if(result.dismiss === 'timer') {
-                                            this.$router.replace({name: 'dashboard', params: { user: resp.credentials.user }})
+                                        if (result.dismiss === 'timer') {
+                                            this.$router.replace({name: 'setup-category'})
                                             // window.location.href = '#/dashboard';
                                         }
                                     })
-                                });
+                                }
                             });
+                        });
                 //
                 //     });
                 // });
