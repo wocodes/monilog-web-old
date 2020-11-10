@@ -4,7 +4,7 @@
 
         <MainContentComponent>
             <h3 class="p-4 text-center">Expense Log ({{ new Date() | formatLongMonth }})</h3>
-            <div id="expense-stats" class="row p-2 bg-warning" style="border-radius: 5px">
+            <div id="expense-stats" class="row p-2 bg-warning" style="shadow-radius: 5px">
                 <div class="col-lg-3 col-md-3 col-sm-12 mb-4">
                     <button class="btn btn-primary btn-md text-light btn-block p-3 shadow" role="button"
                             data-toggle="modal" data-target="#logExpenseModal">
@@ -68,6 +68,55 @@
                                 &#8358; {{ overall_amount.toLocaleString() }}
                             </p>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="monthly-summary">
+                <div class="row mt-4" id="expense-months-cards">
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">January</h6>
+                        N120,000
+                    </div>
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">February</h6>
+                        N120,000
+                    </div>
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">March</h6>
+                        N120,000
+                    </div>
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">April</h6>
+                        N120,000
+                    </div>
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">May</h6>
+                        N120,000
+                    </div>
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">June</h6>
+                        N120,000
+                    </div>
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">July</h6>
+                        N120,000
+                    </div>
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">August</h6>
+                        N120,000
+                    </div>
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">September</h6>
+                        N120,000
+                    </div>
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">October</h6>
+                        N120,000
+                    </div>
+                    <div class="col m-1 p-2 shadow">
+                        <h6 class="font-weight-bold">December</h6>
+                        N120,000
                     </div>
                 </div>
             </div>
@@ -202,5 +251,8 @@
 </script>
 
 <style scoped>
-
+    #expense-months-cards div {
+        border-radius: 10px;
+        text-align: center;
+    }
 </style>

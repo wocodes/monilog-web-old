@@ -7,7 +7,7 @@
                         <div class="modal-header p-2">
                             <h5 class="modal-title" id="exampleModalLabel">
                                 <span class="font-size-h2">&#128221;</span>
-                                Select Expense & Budget Categories
+                                Select Expense & Budget Categories https://www.w3schools.com/charsets/ref_emoji.asp
                             </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <i aria-hidden="true" class="ki ki-close"></i>
