@@ -3,7 +3,7 @@
        <div class="container">
         <div class="row justify-content-center">
             <div class="col col-lg-4 text-center">
-                <h2 class="font-weight-bold">MONILOG</h2>
+                <h1 class="font-weight-bold">MONILOG</h1>
             </div>
         </div>
 
@@ -11,9 +11,9 @@
             <div class="col col-lg-5">
                 <div class="card">
                     <div class="card-header text-center bg-dark text-light">
-                        <h5 class="font-weight-bold">Login</h5>
+                        <h4 class="font-weight-bold m-0">Login</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body shadow-lg">
                         <h6 class="alert alert-warning" v-if="status==='error'">
                             <span class="fa fa-exclamation-triangle"></span>
                             {{ status_message }}
@@ -47,7 +47,7 @@
                     </div>
                 </div>
 
-                <p class="m-6 text-center font-weight-bold">
+                <p class="m-6 text-center font-weight-bold font-size-h4">
                     Don't have an account? <a href="#" @click="switchCard('register')">Register</a>
                 </p>
             </div>
@@ -56,11 +56,11 @@
 
 
         <!-- Register -->
-        <div class="row justify-content-center mt-4" v-show="showRegister">
+        <div class="row justify-content-center mt-2" v-show="showRegister">
             <div class="col col-lg-5">
-                <div class="card">
+                <div class="card shadow-lg">
                     <div class="card-header text-center bg-dark text-light">
-                        <h5 class="font-weight-bold">Register</h5>
+                        <h4 class="font-weight-bold m-0">Register</h4>
                     </div>
                     <div class="card-body">
                         <h6 class="alert alert-warning" v-if="password_incorrect">
@@ -113,7 +113,7 @@
                     </div>
                 </div>
 
-                <p class="m-6 text-center font-weight-bold">
+                <p class="m-6 text-center font-weight-bold font-size-h4">
                     Already have an account? <a href="#" @click="switchCard('login')">Login</a>
                 </p>
             </div>
@@ -182,7 +182,6 @@
                                 timer: 1500,
                                 timerProgressBar: true,
                                 showConfirmButton: false,
-                                // background: "#cfefb7",
                                 width: "300px",
                             }).then(result => {
                                 if(result.dismiss === 'timer') {
@@ -249,7 +248,6 @@
                                         timer: 2500,
                                         timerProgressBar: true,
                                         showConfirmButton: false,
-                                        // background: "#cfefb7",
                                     }).then(result => {
                                         if(result.dismiss === 'timer') {
                                             this.$router.replace({name: 'dashboard', params: { user: resp.credentials.user }})
@@ -278,9 +276,37 @@
 
 <style scoped>
     #auth-page {
-        background-image: url("/images/bg.jpg");
+        background-image: url("/images/bg2.jpg");
         background-size: cover;
         background-repeat: no-repeat;
         height: 100vh;
+    }
+
+    a {
+        color: #fff;
+    }
+
+    button {
+        font-size: 16px !important;
+    }
+
+    .card {
+        border-radius: 10px;
+        border: none;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0;
+        background: linear-gradient(to bottom right, #7b7ad8, #4f63c4);
+    }
+
+    .card-header h4 {
+        line-height: 20px;
+    }
+
+    input {
+        font-size: 26px !important;
+        padding: 24px 15px 15px 10px;
+        height: 44px;
     }
 </style>
