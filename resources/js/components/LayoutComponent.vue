@@ -20,6 +20,11 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+    body {
+        background-image: url("/images/bg2-light.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100vh;
+    }
 </style>

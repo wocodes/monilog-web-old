@@ -74,47 +74,47 @@
 
             <div id="monthly-summary">
                 <div class="row mt-4" id="expense-months-cards">
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">January</h6>
                         N120,000
                     </div>
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">February</h6>
                         N120,000
                     </div>
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">March</h6>
                         N120,000
                     </div>
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">April</h6>
                         N120,000
                     </div>
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">May</h6>
                         N120,000
                     </div>
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">June</h6>
                         N120,000
                     </div>
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">July</h6>
                         N120,000
                     </div>
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">August</h6>
                         N120,000
                     </div>
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">September</h6>
                         N120,000
                     </div>
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">October</h6>
                         N120,000
                     </div>
-                    <div class="col m-1 p-2 shadow">
+                    <div class=" col m-1 p-2 shadow bg-white">
                         <h6 class="font-weight-bold">December</h6>
                         N120,000
                     </div>

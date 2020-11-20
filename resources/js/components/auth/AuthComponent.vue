@@ -14,12 +14,12 @@
                         <h4 class="font-weight-bold m-0">Login</h4>
                     </div>
                     <div class="card-body shadow-lg">
-                        <h6 class="alert alert-warning" v-if="status==='error'">
+                        <h6 class="alert alert-warning text-center" v-if="status==='error'">
                             <span class="fa fa-exclamation-triangle"></span>
                             {{ status_message }}
                         </h6>
 
-                        <form class="p-6" @submit.prevent="doLogin">
+                        <form class="p-6" @submit.prevent="doLogin(login)">
                             <div class="form-group">
                                 <label for="login-email-phone"><small class="font-weight-bold">Email/Phone</small></label>
                                 <input v-model="login.email"
@@ -63,7 +63,7 @@
                         <h4 class="font-weight-bold m-0">Register</h4>
                     </div>
                     <div class="card-body">
-                        <h6 class="alert alert-warning" v-if="password_incorrect">
+                        <h6 class="alert alert-warning text-center" v-if="password_incorrect">
                             <span class="fa fa-exclamation-triangle"></span>
                             Passwords aren't the same
                         </h6>
@@ -152,11 +152,11 @@
         },
 
         methods: {
-            doLogin() {
+            doLogin(loginDet, msg=null) {
                 // send login and details
                 fetch(process.env.MIX_API_URL+'/user/login', {
                     method: "POST",
-                    body: JSON.stringify(this.login),
+                    body: JSON.stringify(loginDet),
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -175,7 +175,7 @@
                             localStorage.setItem("authExpireTime", resp.credentials.expires + Date.now());
 
                             Swal.fire({
-                                text: resp.message,
+                                text: msg ? msg : resp.message,
                                 icon: resp.status,
                                 // toast: true,
                                 position: "center",
@@ -186,7 +186,6 @@
                             }).then(result => {
                                 if(result.dismiss === 'timer') {
                                     this.$router.replace({name: 'dashboard', params: { user: resp.credentials.user }})
-                                    // window.location.href = '#/dashboard';
                                 }
                             })
                         }
@@ -194,10 +193,9 @@
             },
 
             doRegister() {
+                let vm = this;
                 if(this.register.password !== this.register.cpassword) {
                     this.password_incorrect = true;
-                    this.showRegister = true;
-                    this.showLogin = false;
                     return;
                 }
 
@@ -214,45 +212,12 @@
                         .then(resp => resp.json())
                         .then(resp => {
                             // then do login
-                            fetch(process.env.MIX_API_URL+"/user/login", {
-                                method: "POST",
-                                body: JSON.stringify({
+                            vm.doLogin({
                                     email: this.register.email,
-                                    password: this.register.password,
-                                }),
-                                headers: {
-                                    "Content-Type": "application/json",
+                                    password: this.register.password
                                 },
-                            })
-                            .then((resp) => resp.json())
-                            .then((resp) => {
-                                if (resp.status === "error") {
-                                    this.status = "error";
-                                    this.showOverlay = false;
-                                } else {
-                                    this.status = "success";
-                                    this.login_email = "";
-                                    this.login_password = "";
-
-                                    localStorage.setItem("auth", JSON.stringify(resp.credentials));
-                                    localStorage.setItem("authExpireTime", resp.credentials.expires + Date.now());
-
-                                    Swal.fire({
-                                        text: "You've successfully registered. Logging you in.",
-                                        icon: "success",
-                                        // toast: true,
-                                        position: "center",
-                                        timer: 2500,
-                                        timerProgressBar: true,
-                                        showConfirmButton: false,
-                                    }).then(result => {
-                                        if (result.dismiss === 'timer') {
-                                            this.$router.replace({name: 'setup-category'})
-                                            // window.location.href = '#/dashboard';
-                                        }
-                                    })
-                                }
-                            });
+                            "You've successfully registered. Logging you in."
+                            );
                         });
                 //
                 //     });
