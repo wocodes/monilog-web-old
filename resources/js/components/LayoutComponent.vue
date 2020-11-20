@@ -36,11 +36,11 @@
 
                 setTimeout(function() {
                     nugget.style.transition = 'all linear 1s';
-                    nugget.style.transitionDelay = '5s';
+                    nugget.style.transitionDelay = '7s';
 
                     nugget.style.bottom = '-20px';
-                }, 6000)
-            }, 15000);
+                }, 8000)
+            }, 18000);
         }
     }
 </script>

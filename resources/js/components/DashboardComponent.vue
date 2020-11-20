@@ -87,7 +87,7 @@
                         <router-link to="/expense">
                             <span class="fa fa-reply mb-4 text-muted" style="font-size: 40px"></span>
                             <h1 class="font-weight-bold text-warning">
-                                &#8358; {{monthly_total_expense }}
+                                None
                             </h1>
                             <h6 class="font-weight-bold text-secondary mt-10">Next Month's Top Plans/Budget</h6>
                             <small class="text-secondary font-italic">click to see more detail...</small>
@@ -102,7 +102,7 @@
                         <router-link to="/budget">
                             <span class="fa fa-forward mb-4 text-muted" style="font-size: 40px"></span>
                             <h1 class="font-weight-bold text-primary">
-                                &#8358; {{monthly_total_budget}}
+                                &#8358; 0
                             </h1>
                             <h6 class="font-weight-bold text-secondary mt-10">Next Month's Budget</h6>
                             <small class="text-secondary font-italic">click to see more detail...</small>
