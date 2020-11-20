@@ -2046,9 +2046,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 
 
@@ -2147,6 +2144,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2156,6 +2159,20 @@ __webpack_require__.r(__webpack_exports__);
     FooterComponent: _FooterComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
     NavBar: _NavBar__WEBPACK_IMPORTED_MODULE_0__["default"],
     MainContentComponent: _MainContentComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  mounted: function mounted() {
+    var nugget = document.getElementById('nugget');
+    setInterval(function () {
+      setTimeout(function () {
+        nugget.style.transition = 'all linear 1s';
+        nugget.style.bottom = '25px';
+      }, 1000);
+      setTimeout(function () {
+        nugget.style.transition = 'all linear 1s';
+        nugget.style.transitionDelay = '5s';
+        nugget.style.bottom = '-20px';
+      }, 6000);
+    }, 15000);
   }
 });
 
@@ -7802,7 +7819,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nbody {\n    background-image: url(\"/images/bg2-light.jpg\");\n    background-size: cover;\n    background-repeat: no-repeat;\n    height: 100vh;\n}\n", ""]);
+exports.push([module.i, "\nbody {\n    background-image: url(\"/images/bg2-light.jpg\");\n    background-size: cover;\n    background-repeat: no-repeat;\n    height: 100vh;\n}\n#nugget {\n    position:fixed;\n    z-index:1000;\n    bottom:-17px;\n    left:0;\n    border-top: 1px solid #ccc;\n}\n", ""]);
 
 // exports
 
@@ -61643,7 +61660,9 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "col-sm" }, [
             _c("h1", { staticClass: "p-2 text-center font-weight-bold" }, [
-              _vm._v(_vm._s(_vm._f("formatShortWordDate")(new Date())))
+              _vm._v(
+                "📆   " + _vm._s(_vm._f("formatShortWordDate")(new Date()))
+              )
             ])
           ])
         ]),
@@ -61659,7 +61678,7 @@ var render = function() {
                   _c("div", { staticClass: "col" }, [
                     _c("h4", { staticClass: "font-weight-bold" }, [
                       _vm._v(
-                        "\n                            Hello, the month is coming to an end and you seem to have no budget for next month.\n                        "
+                        "\n                            🔔   Hello, the month is coming to an end and you seem to have no budget for next month.\n                        "
                       )
                     ]),
                     _vm._v(" "),
@@ -61671,7 +61690,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("button", { staticClass: "btn btn-sm btn-info col-2" }, [
-                    _vm._v("Make Budget Now")
+                    _vm._v("✍   Make Budget Now")
                   ])
                 ])
               ]
@@ -61776,7 +61795,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "card-deck p-4" }, [
+        _c("div", { staticClass: "card-deck p-4 mb-30" }, [
           _c("div", { staticClass: "card shadow" }, [
             _c(
               "div",
@@ -61913,12 +61932,40 @@ var render = function() {
         1
       ),
       _vm._v(" "),
+      _vm._m(0),
+      _vm._v(" "),
       _c("FooterComponent", { staticClass: "fixed-bottom bg-light" })
     ],
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "mx-auto bg-white w-100 mt-20", attrs: { id: "nugget" } },
+      [
+        _c("p", { staticClass: "text-center font-weight-bold p-2 m-0" }, [
+          _vm._v(
+            "Monilog Nuggets: The best form of saving is investing. Wise investment keeps and grows your money safely. "
+          ),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-primary btn-sm m-0 pl-2 pr-2",
+              attrs: { href: "#" }
+            },
+            [_vm._v("Invest Now")]
+          ),
+          _vm._v(" with Monilog")
+        ])
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 

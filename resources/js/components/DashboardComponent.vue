@@ -20,7 +20,7 @@
                     </router-link>
                 </div>
                 <div class="col-sm">
-                    <h1 class="p-2 text-center font-weight-bold">{{ new Date | formatShortWordDate }}</h1>
+                    <h1 class="p-2 text-center font-weight-bold">&#128198; &nbsp; {{ new Date | formatShortWordDate }}</h1>
                 </div>
             </div>
 
@@ -28,12 +28,12 @@
                 <div class="row">
                     <div class="col">
                         <h4 class="font-weight-bold">
-                            Hello, the month is coming to an end and you seem to have no budget for next month.
+                            &#128276; &nbsp; Hello, the month is coming to an end and you seem to have no budget for next month.
                         </h4>
 
                         <small class="blockquote font-italic">Good financial intelligence requires you to plan for the future ealy...</small>
                     </div>
-                    <button class="btn btn-sm btn-info col-2">Make Budget Now</button>
+                    <button class="btn btn-sm btn-info col-2">&#9997; &nbsp; Make Budget Now</button>
                 </div>
             </div>
 
@@ -81,7 +81,7 @@
                 </div>
             </div>
 
-            <div class="card-deck p-4">
+            <div class="card-deck p-4 mb-30">
                 <div class="card shadow">
                     <div class="card-body text-center">
                         <router-link to="/expense">
@@ -111,9 +111,6 @@
                 </div>
 
             </div>
-
-
-
 
 
 
@@ -187,6 +184,8 @@
                 this.monthly_total_budget = res.monthly_total_budget.toLocaleString();
                 this.monthly_difference = res.monthly_difference.toLocaleString();
             })
+
+
         },
         methods: {
 
